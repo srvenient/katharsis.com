@@ -1,0 +1,36 @@
+  services:
+    backend:
+      ports:
+        - "8000:8000"
+      build:
+        context: ./backend
+        dockerfile: Dockerfile
+      # command: sleep infinity  # Infinite loop to keep container alive doing nothing
+      command:
+        - fastapi
+        - run
+        - --reload
+        - "app/main.py"
+      develop:
+        watch:
+          - path: ./backend
+            action: sync
+            target: /app
+            ignore:
+              - ./backend/.venv
+              - .venv
+          - path: ./backend/pyproject.toml
+            action: rebuild
+      volumes:
+        - ./backend/htmlcov:/app/htmlcov
+      environment:
+        - ENVIRONMENT=${ENVIRONMENT}
+    frontend:
+      ports:
+        - "5173:80"
+      restart: always
+      build:
+        context: ./frontend
+        args:
+          - VITE_API_URL=https://api.${DOMAIN?Variable not set}
+          - NODE_ENV=production
