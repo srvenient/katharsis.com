@@ -1,1 +1,33 @@
 @import "tailwindcss";
+
+@theme {
+    --color-primary: #0f0575;
+    --color-secondary: #7cb3c5;
+    --color-tertiary: #e8d5b5;
+
+    --color-theme-persian-blue: #0F0575;
+    --color-theme-royal-blue: #0040A8;
+    --color-theme-sapphire-blue: #006BC6;
+    --color-theme-vivid-cerulean: #0094D0;
+    --color-theme-pacific-blue: #00BCCB;
+    --color-theme-bright-turquoise: #00E1C1;
+
+    --font-family-special: "kingred", serif;
+    --font-family-primary: "waste", sans-serif;
+}
+
+@font-face {
+    font-family: "kingred";
+    src: url("../src/assets/fonts/kingred.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "waste";
+    src: url("assets/fonts/waste.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
