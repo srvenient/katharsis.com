@@ -1,36 +1,86 @@
-  services:
-    backend:
-      ports:
-        - "8000:8000"
-      build:
-        context: ./backend
-        dockerfile: Dockerfile
-      # command: sleep infinity  # Infinite loop to keep container alive doing nothing
-      command:
-        - fastapi
-        - run
-        - --reload
-        - "app/main.py"
-      develop:
-        watch:
-          - path: ./backend
-            action: sync
-            target: /app
-            ignore:
-              - ./backend/.venv
-              - .venv
-          - path: ./backend/pyproject.toml
-            action: rebuild
-      volumes:
-        - ./backend/htmlcov:/app/htmlcov
-      environment:
-        - ENVIRONMENT=${ENVIRONMENT}
-    frontend:
-      ports:
-        - "5173:80"
-      restart: always
-      build:
-        context: ./frontend
-        args:
-          - VITE_API_URL=https://api.${DOMAIN?Variable not set}
-          - NODE_ENV=production
+services:
+  prestart:
+    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+    build:
+      context: ./backend
+    command: bash scripts/prestart.sh
+    env_file:
+      - .env
+    environment:
+      - DOMAIN=${DOMAIN}
+      - FRONTEND_HOST=${FRONTEND_HOST?Variable not set}
+      - ENVIRONMENT=${ENVIRONMENT}
+      - BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS}
+      - SECRET_KEY=${SECRET_KEY?Variable not set}
+      - FIRST_SUPERUSER=${FIRST_SUPERUSER?Variable not set}
+      - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD?Variable not set}
+      - POSTGRES_SERVER=${POSTGRES_SERVER?Variable not set}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+      - POSTGRES_SSLMODE=${POSTGRES_SSLMODE?Variable not set}
+      - SENTRY_DSN=${SENTRY_DSN}
+
+  backend:
+    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+    depends_on:
+      prestart:
+        condition: service_completed_successfully
+    ports:
+      - "8000:8000"
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    # command: sleep infinity  # Infinite loop to keep container alive doing nothing
+    command:
+      - fastapi
+      - run
+      - --reload
+      - "app/main.py"
+    develop:
+      watch:
+        - path: ./backend
+          action: sync
+          target: /app
+          ignore:
+            - ./backend/.venv
+            - .venv
+        - path: ./backend/pyproject.toml
+          action: rebuild
+    volumes:
+      - ./backend/htmlcov:/app/htmlcov
+    environment:
+      - DOMAIN=${DOMAIN}
+      - FRONTEND_HOST=${FRONTEND_HOST?Variable not set}
+      - ENVIRONMENT=${ENVIRONMENT}
+      - BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS}
+      - SECRET_KEY=${SECRET_KEY?Variable not set}
+      - FIRST_SUPERUSER=${FIRST_SUPERUSER?Variable not set}
+      - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD?Variable not set}
+      - POSTGRES_SERVER=${POSTGRES_SERVER?Variable not set}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+      - POSTGRES_SSLMODE=${POSTGRES_SSLMODE?Variable not set}
+      - SENTRY_DSN=${SENTRY_DSN}
+
+  frontend:
+    image: '${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}'
+    restart: always
+    depends_on:
+      - backend
+    build:
+      context: ./frontend
+      target: development
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=https://api.${DOMAIN?Variable not set}
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true
+    tty: true
