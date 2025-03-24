@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+    --color-deep-blue: #0F0575;
+    --color-violet-blue: #574AE2;
+    --color-vibrant-orange: #FF7A00;
+    --color-fog-gray: #F4F4F8;
+    --color-midnight-black: #1A1A2E;
+}
+
+:root {
+    background-color: var(--color-midnight-black);
+    color: var(--color-fog-gray);
+}
