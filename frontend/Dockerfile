@@ -6,14 +6,15 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
+
 # Stage 1: Development environment
 FROM base AS development
 
 COPY . ./
 
-EXPOSE 5173
+EXPOSE 4321
 
-CMD ["npm", "run", "dev"]
+CMD ["astro", "dev"]
 
 
 # Stage 2: Build environment

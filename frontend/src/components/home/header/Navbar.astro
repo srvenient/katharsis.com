@@ -1,0 +1,120 @@
+---
+import {Picture} from "astro:assets";
+import {Astronav, MenuItems, MenuIcon} from "astro-navbar";
+
+import Logo from "../../../assets/images/katharsis-logo.svg";
+
+import Container from "@/components/ui/layout/Container.astro"
+import Dropdown from "../../ui/overlay/Dropdown.astro";
+import Link from "../../ui/navigation/Link.astro";
+
+interface Item {
+  title: string;
+  path: string;
+  children?: SubItem[];
+}
+
+interface SubItem extends Item {
+  subtitle?: string;
+}
+
+const items: Item[] = [
+  {
+    title: "Caracteristicas",
+    path: "/",
+    children: [
+      {
+        title: "Test 1",
+        subtitle: "Test 1",
+        path: "#"
+      }
+    ]
+  },
+  {
+    title: "Planes",
+    path: "/accounting/pricing",
+  },
+  {
+    title: "Contactenos",
+    path: "/contact"
+  }
+]
+---
+
+<header class="flex flex-col lg:flex-row justify-between items-center my-5 font-family-primary">
+    <Astronav>
+        <div class="flex w-full lg:w-auto items-center justify-between">
+            <a
+                href="/"
+                class="text-lg font-bold flex items-center"
+            >
+                <Picture
+                    src={Logo}
+                    alt="Katharsis Logo"
+                    class="w-18 lg:28"
+                    loading="eager"
+                    format="svg"
+                    widths={[200, 400, 600]}
+                    sizes="(max-width: 800px) 100vw, 500px"
+                />
+                Katharsis
+            </a>
+            <div class="block lg:hidden">
+                <MenuIcon class="w-4 h-4 text-gray-800"/>
+            </div>
+        </div>
+        <MenuItems class="hidden w-full lg:w-auto mt-2 lg:flex lg:mt-0">
+            <ul class="flex flex-col lg:flex-row lg:gap-3">
+              {
+                items.map((item: Item, index: number) => (
+                    <>
+                      {item.children && (
+                          <Dropdown
+                              title={item.title}
+                              children={item.children}
+                              lastItem={index === items.length - 1}
+                          />
+                      )}
+
+                      {!item.children && (
+                          <li>
+                              <a
+                                  href={item.path}
+                                  class="flex lg:px-3 py-2 items-center text-gray-600 hover:text-gray-900"
+                              >
+                                      <span>
+                                          {item.title}
+                                      </span>
+                              </a>
+                          </li>
+                      )}
+                    </>
+                ))
+              }
+            </ul>
+            <div class="lg:hidden flex items-center mt-3 gap-4">
+                <Link
+                    href="#"
+                    style="muted"
+                    block
+                    size="md"
+                >
+                    Ingresa
+                </Link>
+                <Link
+                    href="#"
+                    size="md"
+                    block
+                >
+                    Registrate
+                </Link>
+            </div>
+        </MenuItems>
+    </Astronav>
+    <div>
+        <div class="hidden lg:flex items-center gap-4">
+            <a href="/auth/login">Ingresa</a>
+            <Link href="#" size="md">Registrate</Link>
+        </div>
+    </div>
+</header>
