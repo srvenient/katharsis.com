@@ -1,13 +1,14 @@
-# Usa la versión más reciente estable de Python
-FROM python:3.12.2
+FROM python:3.13.3-slim-bookworm
 
+# Ensure Python output is sent straight to the console (no buffering)
 ENV PYTHONUNBUFFERED=1
 
-WORKDIR /app/
+# Set the working directory
+WORKDIR /app
 
 # Install uv
 # Ref: https://docs.astral.sh/uv/guides/integration/docker/#installing-uv
-COPY --from=ghcr.io/astral-sh/uv:0.5.11 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Place executables in the environment at the front of the path
 # Ref: https://docs.astral.sh/uv/guides/integration/docker/#using-the-environment
@@ -30,15 +31,14 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 ENV PYTHONPATH=/app
 
-COPY ./scripts /app/scripts
-
-COPY ./pyproject.toml ./uv.lock ./alembic.ini /app/
+COPY ./pyproject.toml ./uv.lock ./README.md /app/
 
 COPY ./app /app/app
 
-# Sync the project
-# Ref: https://docs.astral.sh/uv/guides/integration/docker/#intermediate-layers
+# uv Sync the project
+# Ref: https://docs.astral.sh/uv/guides/integration/docker/#using-uv-temporarily
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync
+    uv sync --frozen
 
+# Run the project
 CMD ["fastapi", "run", "--workers", "4", "app/main.py"]
