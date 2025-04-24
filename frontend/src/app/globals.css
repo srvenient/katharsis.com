@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+    --font-special: "Roobert";
+
+    --color-theme-white: oklch(0.97 0.01 250);
+    --color-theme-midnight-black: oklch(0.02 0.1 230);
+    --color-theme-petrol-blue: oklch(0.36 0.0391 248.97);
+    --color-theme-light-petrol-blue: oklch(0.4 0.03 240);
+    --color-theme-light-gray: oklch(0.87 0 0);
+    --color-theme-moss-green: oklch(0.55 0.05 135);
+    --color-theme-olive-gray: oklch(0.45 0.03 100);
+}
+
+@font-face {
+    font-family: "Roobert";
+    src: url("/fonts/Roobert Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-display: swap;
+}
+
+html,
+body {
+    font-family: var(--font-inter), sans-serif;
+    background-color: var(--color-theme-white);
+    color: var(--color-theme-midnight-black);
+}
+
+.animate-marquee {
+    animation: marquee 40s linear infinite;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}

@@ -1,17 +1,30 @@
 {
-  "name": "red-rotation",
-  "type": "module",
-  "version": "0.0.1",
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.2",
-    "astro": "^5.6.0",
-    "astro-navbar": "^2.3.9",
-    "tailwindcss": "^4.1.2"
+    "@heroui/react": "^2.8.0-beta.2",
+    "framer-motion": "^12.7.4",
+    "lucide-react": "^0.501.0",
+    "next": "15.3.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.1",
+    "tailwindcss": "^4.1.4",
+    "typescript": "^5"
   }
 }
