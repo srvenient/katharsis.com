@@ -19,7 +19,8 @@ services:
             - .venv
         - path: ./backend/pyproject.toml
           action: rebuild
-
+    depends_on:
+      - db   #el servicio va a esperar que se levante primero la base de datos para evitar conflictos si no se encuentra la base de datos al iniciar el backend
   frontend:
     container_name: '${PROJECT_NAME?Variable not set}-frontend'
     build:
@@ -40,3 +41,20 @@ services:
             - .env
         - path: ./package.json
           action: rebuild
+
+  db:
+    container_name: '${PROJECT_NAME?Variable not set}-db'
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ktrs.dark
+      MYSQL_DATABASE: katharsis
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 12345
+    ports:
+      - '3306:3306'
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
