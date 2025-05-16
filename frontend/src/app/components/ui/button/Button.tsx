@@ -16,7 +16,7 @@ export default function Button({children, className, type = "button", ...props}:
       className={`
         group flex items-center justify-center
         bg-neutral-50 text-theme-charcoal
-        py-2 px-4 rounded-lg gap-2 cursor-pointer
+        py-2 px-3 rounded-xl gap-2 cursor-pointer
         ${className}
       `}
       {...props}
@@ -24,7 +24,7 @@ export default function Button({children, className, type = "button", ...props}:
       {children}
 
       <div
-        className="relative w-8 h-8 overflow-hidden rounded-md group bg-theme-charcoal transition-colors duration-500"
+        className="relative w-8 h-8 overflow-hidden rounded-sm group bg-theme-charcoal transition-colors duration-500"
       >
         <div className="
           absolute inset-0 z-0
