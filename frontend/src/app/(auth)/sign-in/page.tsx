@@ -4,6 +4,7 @@ import React, {useState} from "react";
 import Link from "next/link";
 import SignInForm from "@/app/(auth)/components/form/SignInForm";
 import Navbar from "@/app/(auth)/components/header/Navbar";
+import {useRouter} from "next/navigation";
 
 const GoogleIcon = () => (
   <svg className="w-4 md:w-5" viewBox="0 0 533.5 544.3">
@@ -38,10 +39,11 @@ const GithubIcon = () => (
 export default function SignIn() {
   const [error, setError] = useState<string | null>(null);
 
+  const router = useRouter();
+
   return (
     <>
-      <Navbar title={"Iniciar sesión"} showButton={false} buttonAction={() => {
-      }}/>
+      <Navbar title={"Iniciar sesión"} showButton={true} buttonAction={() => router.push("/")} />
       <main className="h-screen flex flex-col items-center justify-center bg-white px-4">
         <div className="-mt-34">
           {error && (

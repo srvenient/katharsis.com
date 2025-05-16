@@ -29,7 +29,7 @@ export default function Navbar({ title, showButton=false, buttonAction }: Navbar
       {showButton && (
         <button
           onClick={buttonAction}
-          className="absolute top-0 right-0 bg-blue-600 h-full px-5 hover:brightness-110 transition-all duration-300 ease-in-out text-white"
+          className="absolute top-0 right-0 bg-blue-600 h-full px-5 hover:opacity-75 transition-all duration-300 ease-in-out text-white cursor-pointer"
         >
           <X
             width={24}

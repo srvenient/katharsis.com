@@ -59,7 +59,7 @@ export default function Button({children, className, type = "button", ...props}:
             -translate-x-4 opacity-0
             transition-all duration-500 ease-out
             group-hover:translate-x-0 group-hover:opacity-100
-          text-white
+           text-white
           "
         />
       </div>

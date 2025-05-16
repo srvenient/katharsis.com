@@ -67,16 +67,17 @@ export default function SignUpForm({setErrorAction, setSuccessAction, step, setS
 
   const onSubmit = handleSubmit(async (formData: Inputs) => {
     setErrorAction(null);
+    setSuccessAction(false);
     try {
       const {confirm_password, ...data} = formData;
       if (data.password !== confirm_password) {
-        setErrorAction("Las contraseñas no coinciden");
         return;
       }
       console.log(data);
       await fastApiHttpClient.register({...data, email: data.email.toLocaleLowerCase()});
       reset();
       setSuccessAction(true)
+      setErrorAction(null);
       setStepAction(1);
     } catch (err: any) {
       setErrorAction(err.message);
