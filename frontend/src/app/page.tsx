@@ -81,8 +81,12 @@ export default function Home() {
     <main className="flex flex-col w-full overflow-hidden text-white">
       <div ref={bgRef} className="relative w-full h-[100vh]">
         <div className="sticky top-0 h-screen w-full overflow-hidden">
-          <div ref={orbRef}
-               className="absolute inset-0 w-full h-full bg-[url('/hero-orb.svg')] bg-contain bg-center bg-no-repeat z-0 blur-2xl pointer-events-none"/>
+          <div
+            className="absolute inset-0 w-full h-full bg-[url('/hero-globe.svg')] bg-cover bg-no-repeat opacity-25 z-0 pointer-events-none"/>
+          <div
+            ref={orbRef}
+            className="absolute inset-0 w-full h-full bg-[url('/hero-orb.svg')] bg-contain bg-center bg-no-repeat z-0 blur-2xl pointer-events-none"
+          />
           <div className="absolute inset-0 w-full noise-overlay pointer-events-none opacity-20 z-0"/>
 
           <section
@@ -95,9 +99,13 @@ export default function Home() {
             </h1>
             <div className="mt-100">
               <Button onClick={() => router.push('/sign-in')}>
-                Comenzar ahora
+                <span className="text-sm">Conocer más</span>
               </Button>
             </div>
+            <p className="absolute text-neutral-300 text-sm text-center text-balance leading-5 max-w-md translate-y-70">
+              Katharsis convierte la gestión de inventarios en una tarea sencilla y rápida. Con Katharsis, los pequeños
+              negocios optimizan su stock, reducen costos y mejoran la productividad sin complicaciones.
+            </p>
           </section>
 
           <section
