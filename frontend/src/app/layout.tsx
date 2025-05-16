@@ -1,23 +1,13 @@
 import type { Metadata } from "next";
-import { Inter, Shantell_Sans } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import React from "react";
-import Header from "@/components/landing/header/Header";
-import Footer from "@/components/landing/footer/Footer";
 
-const inter = Inter({
-  variable: "--font-inter",
+const poppins = Poppins({
+  variable: "--font-poppins",
   display: "swap",
   style: "normal",
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  subsets: ["latin"]
-});
-
-const shantell_sans = Shantell_Sans({
-  variable: "--font-shantell-sans",
-  display: "swap",
-  style: "normal",
-  weight: ["400", "500", "600", "700"],
   subsets: ["latin"]
 });
 
@@ -34,11 +24,9 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${inter.variable} ${shantell_sans.variable}`}
+        className={`${poppins.variable}`}
       >
-        <Header/>
         {children}
-        <Footer/>
       </body>
     </html>
   );

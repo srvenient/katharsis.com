@@ -1,20 +1,10 @@
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 
+import jwt
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
-from pydantic import BaseModel
 
 from app.core.config import settings
-
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-
-class TokenData(BaseModel):
-    username: str | None = None
-    scopes: list[str] = []
 
 
 ALGORITHM = "HS256"
@@ -27,7 +17,7 @@ oauth2_scheme = OAuth2PasswordBearer(
 )
 
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None, jwt=None):
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta

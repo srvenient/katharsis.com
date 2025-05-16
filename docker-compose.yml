@@ -1,6 +1,42 @@
 version: "2.22.0"
 
 services:
+  db:
+    container_name: '${PROJECT_NAME?Variable not set}-db'
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ktrs.dark
+      MYSQL_DATABASE: katharsis
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 12345
+    ports:
+      - '3306:3306'
+    volumes:
+      - db_data:/var/lib/mysql
+
+  prestart:
+    container_name: '${PROJECT_NAME?Variable not set}-prestart'
+    build: ./backend
+    command: bash scripts/prestart.sh
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      - DOMAIN=${DOMAIN}
+      - FRONTEND_HOST=${FRONTEND_HOST?Variable not set}
+      - ENVIRONMENT=${ENVIRONMENT}
+      - BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS}
+      - SECRET_KEY=${SECRET_KEY?Variable not set}
+      - POSTGRES_SERVER=${POSTGRES_SERVER?Variable not set}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+      - POSTGRES_SSLMODE=${POSTGRES_SSLMODE?Variable not set}
+
   backend:
     container_name: '${PROJECT_NAME?Variable not set}-backend'
     build: ./backend
@@ -20,12 +56,14 @@ services:
         - path: ./backend/pyproject.toml
           action: rebuild
     depends_on:
-      - db   #el servicio va a esperar que se levante primero la base de datos para evitar conflictos si no se encuentra la base de datos al iniciar el backend
+      prestart:
+        condition: service_completed_successfully
+
   frontend:
     container_name: '${PROJECT_NAME?Variable not set}-frontend'
     build:
       context: ./frontend
-      target: runner
+      target: dev
     ports:
       - '3000:3000'
     develop:
@@ -41,20 +79,6 @@ services:
             - .env
         - path: ./package.json
           action: rebuild
-
-  db:
-    container_name: '${PROJECT_NAME?Variable not set}-db'
-    image: mysql:8.0
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ktrs.dark
-      MYSQL_DATABASE: katharsis
-      MYSQL_USER: user
-      MYSQL_PASSWORD: 12345
-    ports:
-      - '3306:3306'
-    volumes:
-      - db_data:/var/lib/mysql
 
 volumes:
   db_data:

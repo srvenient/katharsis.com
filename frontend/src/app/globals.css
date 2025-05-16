@@ -1,15 +1,14 @@
 @import "tailwindcss";
+@import 'lenis/dist/lenis.css';
 
 @theme {
-    --font-special: "Roobert";
+    --font-special: "Roobert", Arial, sans-serif;
 
-    --color-theme-white: oklch(0.97 0.01 250);
-    --color-theme-midnight-black: oklch(0.02 0.1 230);
-    --color-theme-petrol-blue: oklch(0.36 0.0391 248.97);
-    --color-theme-light-petrol-blue: oklch(0.4 0.03 240);
-    --color-theme-light-gray: oklch(0.87 0 0);
-    --color-theme-moss-green: oklch(0.55 0.05 135);
-    --color-theme-olive-gray: oklch(0.45 0.03 100);
+    --color-theme-pink: oklch(0.82 0.0852 1.34);
+    --color-theme-rosewood: oklch(0.55 0.0538 355.7);
+    --color-theme-charcoal: oklch(0.18 0.0188 274.65);
+    --color-theme-cream: oklch(0.93 0.0529 97.92);
+    --color-theme-light: oklch(0.96 0 0);
 }
 
 @font-face {
@@ -21,20 +20,33 @@
 
 html,
 body {
-    font-family: var(--font-inter), sans-serif;
-    background-color: var(--color-theme-white);
-    color: var(--color-theme-midnight-black);
+    font-family: var(--font-special), sans-serif;
+    background-color: var(--color-theme-charcoal);
+    color: var(--color-theme-light);
 }
 
-.animate-marquee {
-    animation: marquee 40s linear infinite;
+.noise-overlay {
+    background-image: url('/noise.avif');
+    background-repeat: repeat;
+    background-size: 200px;
+    animation: noiseMove 0.5s steps(1) infinite;
 }
 
-@keyframes marquee {
+@keyframes noiseMove {
     0% {
-        transform: translateX(0%);
+        background-position: 0 0;
+    }
+    25% {
+        background-position: 10% 5%;
+    }
+    50% {
+        background-position: 0 10%;
+    }
+    75% {
+        background-position: -10% -5%;
     }
     100% {
-        transform: translateX(-50%);
+        background-position: 0 0;
     }
 }
+

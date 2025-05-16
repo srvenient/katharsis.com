@@ -1,0 +1,87 @@
+import {ApiError} from "@/common/errors/api-error";
+import {BaseHttpClient} from "@/common/http-client/http-client";
+import config from "@/config/config";
+import axios from "axios";
+import {User} from "@/common/types/user";
+
+export class FastApiHttpClient extends BaseHttpClient {
+  constructor() {
+    super({
+      baseURL: config.clients.fastapi.baseURL,
+      timeout: config.clients.fastapi.timeout,
+      keepAlive: config.clients.fastapi.keepAlive,
+      withCredentials: config.clients.fastapi.withCredentials,
+    });
+  }
+
+  async login({username, password}: { username: string; password: string; }): Promise<boolean> {
+    try {
+      console.log(username, password);
+      await this.instance.post(
+        "auth/login/access-token",
+        new URLSearchParams({
+          username,
+          password
+        }),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        }
+      );
+
+      return true;
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err.response) {
+        throw new ApiError(
+          err.response.data?.message ?? "Nombre de usuario, correo electrónico o contraseña incorrectos",
+          err.response.status
+        );
+      }
+      throw new ApiError("Error con el servidor", 500);
+    }
+  }
+
+  async register(data: Record<string, unknown>): Promise<boolean> {
+    try {
+      await this.instance.post("auth/register", data);
+      return true;
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err.response) {
+        throw new ApiError(
+          err.response.data?.message ?? "No se puede completar el registro: el usuario ya existe.",
+          err.response.status
+        );
+      }
+      throw new ApiError("Error con el servidor", 500);
+    }
+  }
+
+  async logout(): Promise<void> {
+    try {
+      await this.instance.post("auth/logout");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err.response) {
+        throw new ApiError(
+          err.response.data?.message ?? "Error al cerrar sesión",
+          err.response.status
+        );
+      }
+      throw new ApiError("Error con el servidor", 500);
+    }
+  }
+
+  async me(): Promise<User> {
+    try {
+      const res = await this.instance.get("auth/me");
+      return res.data;
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err.response) {
+        throw new ApiError(err.response.data.message, err.response.status);
+      }
+      throw new ApiError("Unexpected error fetching user info", 500);
+    }
+  }
+}
+
+export const fastApiHttpClient = new FastApiHttpClient();
