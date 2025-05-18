@@ -6,6 +6,7 @@ import React, {useEffect} from "react";
 import Lenis from 'lenis';
 import Button from "@/app/components/ui/button/Button";
 import {useRouter} from "next/navigation";
+import Header from "@/app/components/header/Header";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -79,15 +80,20 @@ export default function Home() {
 
   return (
     <main className="flex flex-col w-full overflow-hidden text-white">
+      <Header />
       <div ref={bgRef} className="relative w-full h-[100vh]">
         <div className="sticky top-0 h-screen w-full overflow-hidden">
           <div
-            className="absolute inset-0 w-full h-full bg-[url('/hero-globe.svg')] bg-cover bg-no-repeat opacity-25 z-0 pointer-events-none"/>
-          <div
-            ref={orbRef}
-            className="absolute inset-0 w-full h-full bg-[url('/hero-orb.svg')] bg-contain bg-center bg-no-repeat z-0 blur-2xl pointer-events-none"
+            className="absolute inset-0 w-full h-full bg-[url('/hero-globe.svg')] bg-cover bg-no-repeat opacity-25 z-0 pointer-events-none"
           />
-          <div className="absolute inset-0 w-full noise-overlay pointer-events-none opacity-20 z-0"/>
+          <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
+            <div
+              ref={orbRef}
+              className="absolute inset-0 w-full h-full bg-[url('/hero-orb.svg')] bg-contain bg-center bg-no-repeat blur-2xl"
+            />
+            <div className="absolute inset-0 w-full h-full noise-overlay opacity-20" />
+          </div>
+
 
           <section
             ref={section1Ref}
@@ -102,7 +108,7 @@ export default function Home() {
                 <span className="text-sm">Conocer más</span>
               </Button>
             </div>
-            <p className="absolute text-neutral-300 text-sm text-center text-balance leading-5 max-w-md translate-y-70">
+            <p className="absolute text-neutral-400 text-xs md:text-base tracking-wide text-center text-balance leading-5 max-w-lg translate-y-70">
               Katharsis convierte la gestión de inventarios en una tarea sencilla y rápida. Con Katharsis, los pequeños
               negocios optimizan su stock, reducen costos y mejoran la productividad sin complicaciones.
             </p>
@@ -112,14 +118,14 @@ export default function Home() {
             ref={section2Ref}
             className="absolute inset-0 z-10 w-full px-4 py-20 flex items-center justify-center opacity-0"
           >
-            <div className="w-11/12 max-w-6xl flex flex-col md:flex-row justify-between items-center gap-10">
+            <div className="w-11/12 max-w-3xl md:max-w-6xl flex flex-col md:flex-row justify-between items-center gap-10">
               <h2
-                className="text-6xl md:text-5xl font-medium text-center text-balance md:text-left leading-tight max-w-md -translate-y-45"
+                className="text-2xl md:text-5xl font-medium text-balance md:text-left leading-tight max-w-md md:-translate-y-45"
               >
                 Katharsis, el aliado inteligente para tu inventario.
               </h2>
               <p
-                className="text-xl md:text-3xl leading-10 text-center text-balance md:text-left max-w-lg translate-y-45 translate-x-20"
+                className="text-xl md:text-3xl leading-6.5 md:leading-10 text-right text-balance md:text-left max-w-lg translate-y-25 md:translate-y-45 md:translate-x-20"
               >
                 La solución ideal para pequeñas/medianas empresas que necesitan gestionar su inventario de forma
                 eficiente, reducir costos y mejorar su productividad.
@@ -127,6 +133,9 @@ export default function Home() {
             </div>
           </section>
         </div>
+        <section className="relative w-full h-screen">
+          asdasd
+        </section>
       </div>
     </main>
   );
