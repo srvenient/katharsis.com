@@ -20,6 +20,7 @@ dependencies = [
     "email-validator<3.0.0.0,>=2.1.0.post1",
     "emails<1.0,>=0.6",
     "httpx<1.0.0,>=0.25.1",
+    "jinja2<4.0.0,>=3.1.6",
 ]
 
 [tool.uv]
