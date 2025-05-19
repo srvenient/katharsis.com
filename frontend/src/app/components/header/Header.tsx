@@ -1,6 +1,26 @@
 import React from "react";
 import {PackageOpen} from "lucide-react";
 
+type Item = {
+  name: string;
+  href: string;
+}
+
+const items: Item[] = [
+  {
+    name: "Características",
+    href: "#"
+  },
+  {
+    name: "Precios",
+    href: "#"
+  },
+  {
+    name: "Contacto",
+    href: "#"
+  }
+];
+
 export default function Header() {
   return (
     <header
@@ -11,43 +31,19 @@ export default function Header() {
         <div className="bg-neutral-50 flex flex-row items-center justify-center rounded-full w-auto h-full">
           <ul className="flex flex-row items-center justify-center text-neutral-950 divide-x divide-neutral-300 px-2">
             <li className="flex items-center justify-center h-13 gap-x-0.5 hover:text-blue-500 cursor-pointer px-5">
-              <PackageOpen width={20} strokeWidth={1.5}/>
-              Katharsis
+              <PackageOpen width={25} strokeWidth={1.4}/>
             </li>
 
-            <li>
-              <a
-                href="#"
-                className="flex items-center justify-center h-13 hover:text-blue-500 cursor-pointer px-5"
-              >
-                Docs
-              </a>
-            </li>
-
-            <li>
-              <a
-                href="#"
-                className="flex items-center justify-center h-13 hover:text-blue-500 cursor-pointer px-5"
-              >
-                Blog
-              </a>
-            </li>
-
-            <li>
-              <a
-                href="#"
-                className="flex items-center justify-center h-13 hover:text-blue-500 cursor-pointer px-5"
-              >Contact
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="flex items-center justify-center h-13 hover:text-blue-500 cursor-pointer px-5"
-              >
-                Early Access
-              </a>
-            </li>
+            {items.map((item, index) => (
+              <li key={index}>
+                <a
+                  href={item.href}
+                  className="flex items-center justify-center h-13 hover:text-blue-500 cursor-pointer px-5"
+                >
+                  {item.name}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
       </nav>
