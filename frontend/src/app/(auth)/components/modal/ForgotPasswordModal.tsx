@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import {useForm} from "react-hook-form";
-import EmailInput from "@/app/(auth)/components/ui/input/EmailInput";
 import {XIcon} from "lucide-react";
+import gsap from "gsap";
 
 const name = "email";
 
@@ -12,6 +12,8 @@ type ForgotPasswordInput = {
 };
 
 export default function ForgotPasswordModal({onCloseAction}: { onCloseAction: () => void; }) {
+  const modalRef = useRef<HTMLDivElement>(null);
+
   const methods = useForm<ForgotPasswordInput>({
     mode: "onChange",
     defaultValues: {
@@ -23,6 +25,16 @@ export default function ForgotPasswordModal({onCloseAction}: { onCloseAction: ()
   const [isSubmitted, setIsSubmitted] = React.useState(false);
   const email = watch("email")
 
+  useEffect(() => {
+    if (modalRef.current) {
+      gsap.fromTo(
+        modalRef.current,
+        { opacity: 0, y: 40, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "power2.out" }
+      );
+    }
+  }, []);
+
   const onSubmit = handleSubmit(async (data: ForgotPasswordInput) => {
     try {
       //await fastApiHttpClient.forgotPassword({ email: data.email });
@@ -33,9 +45,25 @@ export default function ForgotPasswordModal({onCloseAction}: { onCloseAction: ()
     }
   });
 
+  const handleClose = () => {
+    if (modalRef.current) {
+      gsap.to(modalRef.current, {
+        opacity: 0,
+        y: -40,
+        scale: 0.95,
+        duration: 0.3,
+        ease: "power2.in",
+        onComplete: onCloseAction
+      });
+    } else {
+      onCloseAction(); // fallback por si algo falla
+    }
+  };
+
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-500/70">
-      <div className="bg-white p-6 shadow-md w-full max-w-md space-y-4">
+      <div ref={modalRef} className="bg-white p-6 shadow-md w-full max-w-md space-y-4">
         {isSubmitted ? (
           <>
             <h2 className="text-xl font-semibold">Revisa tu correo</h2>
@@ -46,7 +74,7 @@ export default function ForgotPasswordModal({onCloseAction}: { onCloseAction: ()
             <hr className="my-2 border-t border-gray-300"/>
             <div className="flex justify-start">
               <button
-                onClick={onCloseAction}
+                onClick={handleClose}
                 className="mt-2 px-4 py-2 bg-blue-600 text-white hover:bg-blue-800 transition-colors duration-300 cursor-pointer"
               >
                 OK
@@ -110,7 +138,7 @@ export default function ForgotPasswordModal({onCloseAction}: { onCloseAction: ()
                 </button>
                 <button
                   type="button"
-                  onClick={onCloseAction}
+                  onClick={handleClose}
                   className="w-1/2 px-4 py-2 bg-gray-200 hover:bg-gray-300 transition-colors duration-300 cursor-pointer"
                 >
                   Cancelar
