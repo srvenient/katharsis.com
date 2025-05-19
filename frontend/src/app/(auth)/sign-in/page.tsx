@@ -43,7 +43,7 @@ export default function SignIn() {
 
   return (
     <>
-      <Navbar title={"Iniciar sesión"} showButton={true} buttonAction={() => router.push("/")} />
+      <Navbar title={"Acceso a Katharsis"} showButton={true} buttonAction={() => router.push("/")} />
       <main className="h-screen flex flex-col items-center justify-center bg-white px-4">
         <div className="-mt-34">
           {error && (
