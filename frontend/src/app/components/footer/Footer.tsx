@@ -9,14 +9,14 @@ export default function Footer() {
     <div className="flex items-center justify-center h-230 w-full font-special">
       <footer className="relative flex items-center justify-center h-full w-full overflow-hidden">
         <div
-          className="absolute -top-4/12 left-0 w-full h-full bg-[url('/hero-globe.svg')] bg-no-repeat bg-top bg-[length:100%] rotate-180"
+          className="absolute top-0 left-0 w-full h-full bg-[url('/hero-globe.svg')] bg-no-repeat bg-top bg-[length:100%] rotate-180 opacity-30 z-0 pointer-events-none"
         />
         <div
-          className="absolute top-0 left-0 inset-0 w-full h-full bg-[url('/Orb-Footer.svg')] bg-no-repeat bg-[position:0_100%] bg-[length:100%]"
+          className="absolute top-0 left-0 inset-0 w-full h-full bg-[url('/Orb-Footer.svg')] bg-no-repeat bg-[position:0_100%] bg-[length:100%] z-0 pointer-events-none"
         />
-        <div className="absolute inset-0 w-full noise-overlay pointer-events-none opacity-20"/>
+        <div className="absolute inset-0 w-full noise-overlay pointer-events-none opacity-20 "/>
         <div className="text-white w-full py-10 px-4 mt-auto">
-          <div className="absolute top-4/12 left-0 z-20 flex animate-marquee whitespace-nowrap text-[100px] font-bold">
+          <div className="absolute top-4/12 left-0 z-20 flex animate-marquee whitespace-nowrap text-[100px] font-bold pointer-events-none">
             {
               words.map((word, i) => (
                 <span key={i} className="mx-8">{word}</span>
