@@ -1,7 +1,8 @@
 import secrets
-from typing import Annotated, Any
+import warnings
+from typing import Annotated, Any, Self
 
-from pydantic import AnyUrl, BeforeValidator, computed_field, HttpUrl, PostgresDsn
+from pydantic import AnyUrl, BeforeValidator, computed_field, HttpUrl, PostgresDsn, model_validator, EmailStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -41,6 +42,30 @@ class Settings(BaseSettings):
         return [str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS] + [
             self.FRONTEND_HOST
         ]
+
+    SMTP_TLS: bool = True
+    SMTP_SSL: bool = False
+    SMTP_PORT: int = 587
+    SMTP_HOST: str = "smtp.gmail.com"
+    SMTP_USER: EmailStr = "nrodriguezr@unimonserrate.edu.co"
+    SMTP_PASSWORD: str = "vtwd koxc scmz yegx"
+    EMAILS_FROM_EMAIL: EmailStr = "nrodriguezr@unimonserrate.edu.co"
+    EMAILS_FROM_NAME: str = "Katharsis"
+
+    @model_validator(mode="after")
+    def _set_default_emails_from(self) -> Self:
+        if not self.EMAILS_FROM_NAME:
+            self.EMAILS_FROM_NAME = self.PROJECT_NAME
+        return self
+
+    EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def emails_enabled(self) -> bool:
+        return bool(self.SMTP_HOST and self.EMAILS_FROM_EMAIL)
+
+    EMAIL_TEST_USER: EmailStr = "test@example.com"
 
     POSTGRES_USER: str = "library_owner"
     POSTGRES_PASSWORD: str = "npg_jLdbhi7x1Ycv"
