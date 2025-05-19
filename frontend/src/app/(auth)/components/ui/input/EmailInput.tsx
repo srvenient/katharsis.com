@@ -17,7 +17,7 @@ export default function EmailInput({name, placeholder="Email / Username", requir
         required: requiredMessage ? "El correo es requerido" : false,
         pattern: {
           value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-          message: "El correo debe ser válido"
+          message: "El correo electrónico no es válido"
         }
       }}
     />
