@@ -4,6 +4,7 @@ import React, {useEffect, useRef} from "react";
 import {useForm} from "react-hook-form";
 import {XIcon} from "lucide-react";
 import gsap from "gsap";
+import {fastApiHttpClient} from "@/common/http-client/fastapi.http-client";
 
 const name = "email";
 
@@ -37,8 +38,7 @@ export default function ForgotPasswordModal({onCloseAction}: { onCloseAction: ()
 
   const onSubmit = handleSubmit(async (data: ForgotPasswordInput) => {
     try {
-      //await fastApiHttpClient.forgotPassword({ email: data.email });
-      console.log(data.email)
+      await fastApiHttpClient.passwordRecovery(data.email);
       setIsSubmitted(true);
     } catch (err: any) {
       console.log(err)
@@ -84,7 +84,10 @@ export default function ForgotPasswordModal({onCloseAction}: { onCloseAction: ()
         ) : (
           <>
             <h2 className="text-lg font-semibold">Recuperar contraseña</h2>
-            <form onSubmit={onSubmit} className="space-y-6">
+            <form
+              onSubmit={onSubmit}
+              className="space-y-6"
+            >
               <p className="-mt-3 text-sm text-gray-700">
                 Digite su correo electrónico para recibir instrucciones de recuperación.
               </p>

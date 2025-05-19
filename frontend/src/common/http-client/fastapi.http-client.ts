@@ -82,6 +82,20 @@ export class FastApiHttpClient extends BaseHttpClient {
       throw new ApiError("Unexpected error fetching user info", 500);
     }
   }
+
+  async passwordRecovery(email: string): Promise<void> {
+    try {
+      await this.instance.post(`auth/password-recovery/${encodeURIComponent(email)}`);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err.response) {
+        throw new ApiError(
+          err.response.data?.message ?? "Error al enviar el correo de recuperación",
+          err.response.status
+        );
+      }
+      throw new ApiError("Error con el servidor", 500);
+    }
+  }
 }
 
 export const fastApiHttpClient = new FastApiHttpClient();
