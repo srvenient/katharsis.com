@@ -11,7 +11,7 @@ type NavbarProps = {
 
 export default function Navbar({ title, showButton=false, buttonAction }: NavbarProps) {
   return (
-    <nav className="relative bg-gradient-to-bl from-neutral-400 via-5% to-neutral-50 text-white py-2">
+    <nav className="relative bg-gradient-to-bl from-neutral-400 via-5% to-neutral-50 text-white py-2.5">
       <div className="flex items-center gap-8 px-5 md:px-0 md:justify-between max-w-2xl xl:max-w-5xl mx-auto">
         <div className="flex flex-row items-center justify-center cursor-pointer">
           <PackageOpen
