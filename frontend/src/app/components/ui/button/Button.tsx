@@ -16,7 +16,7 @@ export default function Button({children, className, type = "button", ...props}:
       className={`
         group flex items-center justify-center
         bg-neutral-50 text-theme-charcoal
-        py-2 px-3 rounded-xl gap-2 cursor-pointer
+        py-3 px-4 rounded-xl gap-2 cursor-pointer
         ${className}
       `}
       {...props}

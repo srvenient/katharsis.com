@@ -114,7 +114,7 @@ export default function Home() {
               </h1>
               <div className="mt-100">
                 <Button onClick={() => router.push('/sign-in')}>
-                  <span className="text-sm">Iniciar sesión</span>
+                  <span className="text-base">Iniciar sesión</span>
                 </Button>
               </div>
               <p
