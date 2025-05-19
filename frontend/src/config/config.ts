@@ -1,7 +1,7 @@
 import { FastApiConfig } from "./types/fastapi.type";
-import { EnvironmentType } from "../common/env";
-import { getEnv } from "../common/env";
-import { EnvironmentEnum } from "../common/env";
+import { EnvironmentType } from "@/common/env";
+import { getEnv } from "@/common/env";
+import { EnvironmentEnum } from "@/common/env";
 import local from "./local";
 import stg from "./stg";
 import prod from "./prod";

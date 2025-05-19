@@ -1,5 +1,5 @@
-import { EnvironmentEnum } from "../common/env";
 import { AppConfig } from "./config";
+import { EnvironmentEnum } from "@/common/env";
 
 export default {
   clients: {
