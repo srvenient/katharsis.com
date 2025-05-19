@@ -36,21 +36,29 @@ export default function Home() {
     requestAnimationFrame(raf);
 
     if (orbRef.current) {
-      ScrollTrigger.create({
-        trigger: orbRef.current,
-        start: 'top top',
-        end: 'bottom top',
-        pin: true,
-        pinSpacing: false,
-        scrub: true,
-        onUpdate: (self) => {
-          const progress = self.progress;
+      const orbMaxScale = 1;
 
-          gsap.to(orbRef.current, {
-            scale: 1 + progress * 3,
-            ease: 'power2.out',
-          });
+
+      const orbTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: orbRef.current,
+          start: 'top top',
+          end: '+=1000',
+          scrub: true,
+          pin: false,
+          pinSpacing: false,
+          onLeave: () => {
+            const footer = document.querySelector('footer');
+            if (footer) {
+              lenis.scrollTo(footer, { offset: -50 });
+            }
+          }
         }
+      });
+
+      orbTimeline.to(orbRef.current, {
+        scale: 1 + orbMaxScale * 2,
+        ease: 'power2.out',
       });
     }
 
@@ -79,64 +87,67 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex flex-col w-full overflow-hidden text-white">
-      <Header />
-      <div ref={bgRef} className="relative w-full h-[100vh]">
-        <div className="sticky top-0 h-screen w-full overflow-hidden">
-          <div
-            className="absolute inset-0 w-full h-full bg-[url('/hero-globe.svg')] bg-cover bg-no-repeat opacity-25 z-0 pointer-events-none"
-          />
-          <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
+    <>
+      <Header/>
+      <main className="flex flex-col w-full overflow-hidden text-white">
+        <div ref={bgRef} className="relative w-full h-[100vh]">
+          <div className="sticky top-0 h-screen w-full overflow-hidden">
             <div
-              ref={orbRef}
-              className="absolute inset-0 w-full h-full bg-[url('/hero-orb.svg')] bg-contain bg-center bg-no-repeat blur-2xl"
+              className="absolute inset-0 w-full h-full bg-[url('/hero-globe.svg')] bg-cover bg-no-repeat opacity-25 z-0 pointer-events-none"
             />
-            <div className="absolute inset-0 w-full h-full noise-overlay opacity-20" />
-          </div>
-
-
-          <section
-            ref={section1Ref}
-            className="absolute inset-0 z-20 flex flex-col items-center justify-center w-full text-center px-4"
-          >
-            <h1 className="absolute text-6xl md:text-7xl font-medium leading-18">
-              Un Click.<br/>
-              Y Respiras.
-            </h1>
-            <div className="mt-100">
-              <Button onClick={() => router.push('/sign-in')}>
-                <span className="text-sm">Conocer más</span>
-              </Button>
+            <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
+              <div
+                ref={orbRef}
+                className="absolute inset-0 w-full h-full bg-[url('/hero-orb.svg')] bg-contain bg-center bg-no-repeat blur-2xl will-change-transform"
+              />
+              <div className="absolute inset-0 w-full h-full noise-overlay opacity-20"/>
             </div>
-            <p className="absolute text-neutral-400 text-xs md:text-base tracking-wide text-center text-balance leading-5 max-w-lg translate-y-70">
-              Katharsis convierte la gestión de inventarios en una tarea sencilla y rápida. Con Katharsis, los pequeños
-              negocios optimizan su stock, reducen costos y mejoran la productividad sin complicaciones.
-            </p>
-          </section>
 
-          <section
-            ref={section2Ref}
-            className="absolute inset-0 z-10 w-full px-4 py-20 flex items-center justify-center opacity-0"
-          >
-            <div className="w-11/12 max-w-3xl md:max-w-6xl flex flex-col md:flex-row justify-between items-center gap-10">
-              <h2
-                className="text-2xl md:text-5xl font-medium text-balance md:text-left leading-tight max-w-md md:-translate-y-45"
-              >
-                Katharsis, el aliado inteligente para tu inventario.
-              </h2>
+
+            <section
+              ref={section1Ref}
+              className="absolute inset-0 z-20 flex flex-col items-center justify-center w-full text-center px-4"
+            >
+              <h1 className="absolute text-6xl md:text-7xl font-medium leading-18">
+                Un Click.<br/>
+                Y Respiras.
+              </h1>
+              <div className="mt-100">
+                <Button onClick={() => router.push('/sign-in')}>
+                  <span className="text-sm">Iniciar sesión</span>
+                </Button>
+              </div>
               <p
-                className="text-xl md:text-3xl leading-6.5 md:leading-10 text-right text-balance md:text-left max-w-lg translate-y-25 md:translate-y-45 md:translate-x-20"
-              >
-                La solución ideal para pequeñas/medianas empresas que necesitan gestionar su inventario de forma
-                eficiente, reducir costos y mejorar su productividad.
+                className="absolute text-neutral-400 text-xs md:text-base tracking-wide text-center text-balance leading-5 max-w-lg translate-y-70">
+                Katharsis convierte la gestión de inventarios en una tarea sencilla y rápida. Con Katharsis, los
+                pequeños
+                negocios optimizan su stock, reducen costos y mejoran la productividad sin complicaciones.
               </p>
-            </div>
-          </section>
+            </section>
+
+            <section
+              ref={section2Ref}
+              className="absolute inset-0 z-10 w-full px-4 py-20 flex items-center justify-center opacity-0"
+            >
+              <div
+                className="w-11/12 max-w-3xl md:max-w-6xl flex flex-col md:flex-row justify-between items-center gap-10"
+              >
+                <h2
+                  className="text-2xl md:text-5xl font-medium text-balance md:text-left leading-tight max-w-md md:-translate-y-45"
+                >
+                  Katharsis, el aliado inteligente para tu inventario.
+                </h2>
+                <p
+                  className="text-xl md:text-3xl leading-6.5 md:leading-10 text-right text-balance md:text-left max-w-lg translate-y-25 md:translate-y-45 md:translate-x-20"
+                >
+                  La solución ideal para pequeñas/medianas empresas que necesitan gestionar su inventario de forma
+                  eficiente, reducir costos y mejorar su productividad.
+                </p>
+              </div>
+            </section>
+          </div>
         </div>
-        <section className="relative w-full h-screen">
-          asdasd
-        </section>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
