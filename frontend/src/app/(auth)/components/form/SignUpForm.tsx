@@ -81,6 +81,7 @@ export default function SignUpForm({setErrorAction, setSuccessAction, step, setS
       setStepAction(1);
     } catch (err: any) {
       setErrorAction(err.message);
+      setSuccessAction(false);
     }
   });
 
