@@ -1,8 +1,8 @@
 import secrets
-import warnings
 from typing import Annotated, Any, Self
 
-from pydantic import AnyUrl, BeforeValidator, computed_field, HttpUrl, PostgresDsn, model_validator, EmailStr
+from pydantic import AnyUrl, BeforeValidator, computed_field, PostgresDsn, model_validator, EmailStr
+from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -50,7 +50,7 @@ class Settings(BaseSettings):
     SMTP_USER: EmailStr = "nrodriguezr@unimonserrate.edu.co"
     SMTP_PASSWORD: str = "vtwd koxc scmz yegx"
     EMAILS_FROM_EMAIL: EmailStr = "nrodriguezr@unimonserrate.edu.co"
-    EMAILS_FROM_NAME: str = "Katharsis"
+    EMAILS_FROM_NAME: str = "Forgot your password?"
 
     @model_validator(mode="after")
     def _set_default_emails_from(self) -> Self:
@@ -67,24 +67,22 @@ class Settings(BaseSettings):
 
     EMAIL_TEST_USER: EmailStr = "test@example.com"
 
-    POSTGRES_USER: str = "library_owner"
-    POSTGRES_PASSWORD: str = "npg_jLdbhi7x1Ycv"
-    POSTGRES_SERVER: str = "ep-withered-fog-a8jq1uxt-pooler.eastus2.azure.neon.tech"
+    POSTGRES_SERVER: str
     POSTGRES_PORT: int = 5432
-    POSTGRES_DB: str = "katharsis"
-    POSTGRES_SSLMODE: str = "require"
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str = ""
+    POSTGRES_DB: str = ""
 
     @computed_field  # type: ignore[prop-decorator]
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:
-        return PostgresDsn.build(
+        return MultiHostUrl.build(
             scheme="postgresql+psycopg",
             username=self.POSTGRES_USER,
             password=self.POSTGRES_PASSWORD,
             host=self.POSTGRES_SERVER,
             port=self.POSTGRES_PORT,
             path=self.POSTGRES_DB,
-            query="sslmode=" + self.POSTGRES_SSLMODE
         )
 
 

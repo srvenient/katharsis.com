@@ -129,11 +129,12 @@ def recover_password(email: str, session: SessionDep) -> Message:
     return Message(message="Password recovery email sent")
 
 
-@router.post("/reset-password/")
+@router.post("/reset-password")
 def reset_password(session: SessionDep, body: NewPassword) -> Message:
     """
     Reset password
     """
+    print(body)
     email = verify_password_reset_token(token=body.token)
     if not email:
         raise HTTPException(status_code=400, detail="Invalid token")
