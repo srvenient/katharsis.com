@@ -1,17 +1,22 @@
 services:
   db:
-    container_name: '${PROJECT_NAME?Variable not set}-db'
-    image: mysql:8.0
+    image: postgres:17
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ktrs.dark
-      MYSQL_DATABASE: katharsis
-      MYSQL_USER: user
-      MYSQL_PASSWORD: 12345
-    ports:
-      - '3306:3306'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
     volumes:
-      - db_data:/var/lib/mysql
+      - app-db-data:/var/lib/postgresql/data/pgdata
+    env_file:
+      - .env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
+      - POSTGRES_DB=${POSTGRES_DB?Variable not set}
 
   prestart:
     container_name: '${PROJECT_NAME?Variable not set}-prestart'
@@ -20,6 +25,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+        restart: true
     env_file:
       - .env
     environment:
@@ -28,12 +34,15 @@ services:
       - ENVIRONMENT=${ENVIRONMENT}
       - BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS}
       - SECRET_KEY=${SECRET_KEY?Variable not set}
-      - POSTGRES_SERVER=${POSTGRES_SERVER?Variable not set}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - EMAILS_FROM_EMAIL=${EMAILS_FROM_EMAIL}
+      - POSTGRES_SERVER=db
       - POSTGRES_PORT=${POSTGRES_PORT}
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER?Variable not set}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
-      - POSTGRES_SSLMODE=${POSTGRES_SSLMODE?Variable not set}
 
   backend:
     container_name: '${PROJECT_NAME?Variable not set}-backend'
@@ -42,6 +51,21 @@ services:
       - '8000:8000'
     env_file:
       - .env
+    environment:
+      - DOMAIN=${DOMAIN}
+      - FRONTEND_HOST=${FRONTEND_HOST?Variable not set}
+      - ENVIRONMENT=${ENVIRONMENT}
+      - BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS}
+      - SECRET_KEY=${SECRET_KEY?Variable not set}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - EMAILS_FROM_EMAIL=${EMAILS_FROM_EMAIL}
+      - POSTGRES_SERVER=db
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
     command: ["fastapi", "run", "--reload", "app/main.py"]
     develop:
       watch:
@@ -54,6 +78,9 @@ services:
         - path: ./backend/pyproject.toml
           action: rebuild
     depends_on:
+      db:
+        condition: service_healthy
+        restart: true
       prestart:
         condition: service_completed_successfully
 
@@ -79,4 +106,4 @@ services:
           action: rebuild
 
 volumes:
-  db_data:
+  app-db-data:
