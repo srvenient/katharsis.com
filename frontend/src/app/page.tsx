@@ -4,9 +4,10 @@ import gsap from 'gsap';
 import {ScrollTrigger} from 'gsap/ScrollTrigger';
 import React, {useEffect} from "react";
 import Lenis from 'lenis';
-import Button from "@/app/components/ui/button/Button";
+import Button from "@/components/ui/button/Button";
 import {useRouter} from "next/navigation";
-import Header from "@/app/components/header/Header";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -50,7 +51,7 @@ export default function Home() {
           onLeave: () => {
             const footer = document.querySelector('footer');
             if (footer) {
-              lenis.scrollTo(footer, { offset: -50 });
+              lenis.scrollTo(footer, {offset: -50});
             }
           }
         }
@@ -148,6 +149,7 @@ export default function Home() {
           </div>
         </div>
       </main>
+      <Footer/>
     </>
   );
 }

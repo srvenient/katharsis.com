@@ -96,6 +96,32 @@ export class FastApiHttpClient extends BaseHttpClient {
       throw new ApiError("Error con el servidor", 500);
     }
   }
+
+  async resetPassword(token: string, password: string): Promise<void> {
+    try {
+      await this.instance.post(
+        "auth/reset-password",
+        {
+          token,
+          new_password: password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err.response) {
+        console.error("Error response data:", err.response.data);
+        throw new ApiError(
+          err.response.data?.detail ?? "Error al restablecer la contraseña",
+          err.response.status
+        );
+      }
+      throw new ApiError("Error con el servidor", 500);
+    }
+  }
 }
 
 export const fastApiHttpClient = new FastApiHttpClient();
