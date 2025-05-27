@@ -1,5 +1,5 @@
 from datetime import timedelta
-from typing import Annotated, Any
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Response
 from fastapi.security import OAuth2PasswordRequestForm
@@ -8,7 +8,7 @@ from starlette import status
 from starlette.responses import JSONResponse
 
 from app.api.auth.model.token_models import Token
-from app.api.deps import SessionDep, CurrentUser, get_token_from_cookie
+from app.api.deps import SessionDep, get_token_from_cookie
 from app.api.user.model.user_models import User, UserCreate
 from app.api.user.repository import user_crud
 from app.core import security
