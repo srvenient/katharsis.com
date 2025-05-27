@@ -100,11 +100,6 @@ def logout(token: Annotated[str, Depends(get_token_from_cookie)]) -> Response:
     return response
 
 
-@router.get("/me")
-def verify_token(student: CurrentUser):
-    return student
-
-
 @router.post("/password-recovery/{email}")
 def recover_password(email: str, session: SessionDep) -> Message:
     """
