@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 from app.api.deps import CurrentUser
 
-router = APIRouter(prefix="/user", tags=["users"])
+router = APIRouter(prefix="/users", tags=["users"])
 
 
 @router.get("/me")
