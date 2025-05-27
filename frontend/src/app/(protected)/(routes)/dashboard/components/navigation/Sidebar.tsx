@@ -76,10 +76,10 @@ export default function Sidebar() {
                         <Link
                           key={sub.name}
                           href={sub.path}
-                          className={`flex items-center pl-3 pr-4 py-2 text-sm text-white ${pathname === sub.path ? "gap-6.5" : "gap-7"}`}
+                          className={`flex items-center pr-4 py-2 text-sm text-white ${pathname === sub.path ? "pl-2.5 gap-6.5" : "pl-3 gap-7"}`}
                         >
                           <div
-                            className={`bg-blue-600 rounded-full ${pathname === sub.path ? "w-2 h-2" : "w-1.5 h-1.5"}`}/>
+                            className={`bg-blue-600 rounded-full ${pathname === sub.path ? "w-2.5 h-2.5" : "w-1.5 h-1.5"}`}/>
                           {sub.name}
                         </Link>
                       ))}
