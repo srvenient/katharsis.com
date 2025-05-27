@@ -27,8 +27,6 @@ def create_product_view(
 ):
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    if not user.is_admin:
-        raise HTTPException(status_code=403, detail="Not authorized to create products")
 
     return create_product(session=session, product_create=product_in)
 
@@ -71,8 +69,6 @@ def update_product_view(
 ):
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    if not user.is_admin:
-        raise HTTPException(status_code=403, detail="Not authorized to create products")
 
     product = update_product(session=session, product_id=product_id, product_update=product_in)
     if not product:
@@ -88,8 +84,6 @@ def delete_product_view(
 ):
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    if not user.is_admin:
-        raise HTTPException(status_code=403, detail="Not authorized to create products")
 
     deleted = delete_product(session=session, product_id=product_id)
     if not deleted:
