@@ -25,7 +25,6 @@ from sqlmodel import SQLModel
 
 target_metadata = SQLModel.metadata
 
-print(target_metadata.tables.keys())
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
