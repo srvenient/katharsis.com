@@ -1,14 +1,9 @@
 import {
   CalendarDaysIcon,
   HomeIcon,
-  UserCircleIcon,
-  ArchiveBoxIcon,
   UsersIcon,
-  Cog6ToothIcon,
-  RectangleStackIcon,
   CubeIcon,
   ArrowRightOnRectangleIcon,
-  AdjustmentsHorizontalIcon
 } from "@heroicons/react/24/solid";
 import React from "react";
 
@@ -17,6 +12,7 @@ type SubNavItem = {
   path: string;
   pro?: boolean;
   new?: boolean;
+  subItems?: SubNavItem[];
 };
 
 type NavItem = {
@@ -36,7 +32,13 @@ export const navItems: NavItem[] = [
     name: "Inventario",
     icon: <CubeIcon/>,
     subItems: [
-      {name: "Productos", path: "/inventory/products"},
+      {
+        name: "Productos", path: "/inventory/products",
+        subItems: [
+          {name: "Crear producto", path: "/inventory/products/new-product"},
+          {name: "Editar producto", path: "/inventory/products/edit-product"},
+        ]
+      },
       {name: "Movimientos", path: "/inventory/movements"}
     ]
   },
