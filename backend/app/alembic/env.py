@@ -21,6 +21,7 @@ fileConfig(config.config_file_name)
 
 from app.core.config import settings
 from app.api.user.model import user_models
+from app.api.product.model import product_models
 from sqlmodel import SQLModel
 
 target_metadata = SQLModel.metadata
