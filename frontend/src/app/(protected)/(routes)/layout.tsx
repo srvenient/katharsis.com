@@ -20,7 +20,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
         className={`flex items-center justify-center h-screen`}
       >
         <div
-          className="absolute inset-0 w-full h-full bg-[url('/body-background.png')] bg-position-[150%_0] bg-no-repeat z-0 blur-3xl"
+          className="absolute inset-0 w-full h-full bg-[url('/body-background.png')] bg-position-[150%_0] bg-no-repeat z-0 blur-2xl"
         />
         {children}
       </main>

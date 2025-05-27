@@ -37,7 +37,6 @@ export const navItems: NavItem[] = [
     icon: <CubeIcon/>,
     subItems: [
       {name: "Productos", path: "/inventory/products"},
-      {name: "Stock", path: "/inventory/stock"},
       {name: "Movimientos", path: "/inventory/movements"}
     ]
   },
