@@ -73,7 +73,7 @@ export class FastApiHttpClient extends BaseHttpClient {
 
   async me(): Promise<User> {
     try {
-      const res = await this.instance.get("auth/me");
+      const res = await this.instance.get("users/me");
       return res.data;
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err.response) {
