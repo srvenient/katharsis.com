@@ -35,6 +35,7 @@ export default function ProductList() {
                         <td className="px-6 py-4">3</td>
                     </tr>
                     </tbody>
+
                 </table>
             </div>
         </div>
