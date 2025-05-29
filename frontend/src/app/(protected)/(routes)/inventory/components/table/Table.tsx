@@ -1,54 +1,50 @@
 // components/MyDataTable.tsx
 "use client";
 
-import React, { useEffect, useRef } from 'react';
-import $ from 'jquery';
-import "datatables.net";
-import {columns} from "@/app/(protected)/(routes)/inventory/components/table/Table.data";
+
+import {useEffect, useState} from "react";
 import {Product} from "@/common/types/product";
+import {fastApiHttpClient} from "@/common/http-client/fastapi.http-client";
 
-
-interface ApiResponse {
-  data: Product[];
-}
-
-export default function MyDataTable() {
-  const tableRef = useRef<HTMLTableElement>(null);
+export default function Table() {
+  const [data, setData] = useState<Product[]>([]);
 
   useEffect(() => {
-    if (!tableRef.current) return;
-
-    const table = $(tableRef.current).DataTable({
-      ajax: {
-        url: 'http://localhost:8000/api/v1/products',
-        dataSrc: (json: ApiResponse) => json.data,
-      },
-      columns: columns,
-      processing: true,
-      serverSide: true,
-      destroy: true,
-      search: true,
-    });
-
-    return () => {
-      table.destroy();
-    };
+    fastApiHttpClient.getAllProducts({skip: 0, limit: 10})
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+      });
   }, []);
 
   return (
-    <table ref={tableRef} className="display" style={{ width: '100%' }}>
-      <thead>
+    <table className="min-w-full text-sm text-left text-white border border-white/10 rounded-xl overflow-hidden">
+      <thead className="bg-[rgba(6,11,40,0.94)] text-xs uppercase tracking-wider">
       <tr>
-        <th>ID</th>
-        <th>Nombre del producto</th>
-        <th>Descripción</th>
-        <th>Precio de compra</th>
-        <th>Precio de venta</th>
-        <th>Stock actual</th>
-        <th>Stock mínimo</th>
+        <th className="px-6 py-3">ID</th>
+        <th className="px-6 py-3">Nombre del producto</th>
+        <th className="px-6 py-3">Descripción del producto</th>
+        <th className="px-6 py-3">Categoría</th>
+        <th className="px-6 py-3">Precio de venta</th>
+        <th className="px-6 py-3">Stock actual</th>
+        <th className="px-6 py-3">Stock mínimo permitido</th>
       </tr>
       </thead>
-      <tbody />
+      <tbody className="bg-[#0f1535] divide-y divide-white/10">
+      {data.map((product: Product) => (
+        <tr key={product.id}>
+          <td className="px-6 py-4">{product.id}</td>
+          <td className="px-6 py-4">{product.name}</td>
+          <td className="px-6 py-4">{product.description}</td>
+          <td className="px-6 py-4">{product.category_id}</td>
+          <td className="px-6 py-4">${product.sale_price}</td>
+          <td className="px-6 py-4">{product.current_stock}</td>
+          <td className="px-6 py-4">{product.minimum_stock}</td>
+        </tr>
+      ))}
+      </tbody>
     </table>
   );
 }
