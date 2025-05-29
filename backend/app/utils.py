@@ -1,3 +1,4 @@
+import hashlib
 import logging
 from dataclasses import dataclass
 from datetime import timedelta, datetime, timezone
@@ -114,3 +115,9 @@ def verify_password_reset_token(token: str) -> str | None:
         return str(decoded_token["sub"])
     except InvalidTokenError:
         return None
+
+
+def generate_code(category: int, information: str) -> str:
+    base_string = f"{category}-{information}"
+    code = hashlib.sha256(base_string.encode()).hexdigest()[:12].upper()
+    return code
