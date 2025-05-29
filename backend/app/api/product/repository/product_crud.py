@@ -14,8 +14,14 @@ def get_product_by_id(*, session: Session, product_id: int) -> Product | None:
     return session.get(Product, product_id)
 
 
-def get_all_products(*, session: Session, skip: int = 0, limit: int = 100) -> list[Product]:
-    statement = select(Product).offset(skip).limit(limit)
+def get_all_products(*, session: Session, tenant_id: int, skip: int = 0, limit: int = 100) -> list[Product]:
+    statement = (
+        select(Product)
+        .where(Product.tenant_id == tenant_id)
+        .offset(skip)
+        .limit(limit)
+        .order_by(Product.id)
+    )
     return session.exec(statement).all()
 
 
