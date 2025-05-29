@@ -8,7 +8,6 @@ export type Inputs = {
   price: number;
   currency: string;
   sku: string;
-  project_tags: string[];
 }
 
 export enum Step {
@@ -20,7 +19,7 @@ export enum Step {
 const fieldsByStep: Record<Step, readonly (keyof Inputs)[]> = {
   [Step.Information]: ["name", "weight", "description", "category", "size"],
   [Step.Media]: ["image"],
-  [Step.Pricing]: ["price", "currency", "sku", "project_tags"],
+  [Step.Pricing]: ["price", "currency", "sku"],
 } as const;
 
 export function getFieldsByStep(step: Step): readonly (keyof Inputs)[] {

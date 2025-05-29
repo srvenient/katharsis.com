@@ -28,13 +28,14 @@ type Inputs = {
   password: string;
   confirm_password: string;
   role_id: number;
+  tenant_id: number;
 }
 
 export default function SignUpForm({setErrorAction, setSuccessAction, step, setStepAction}: SignUpFormProps) {
   const methods = useForm<Inputs>({
     mode: "onChange",
     defaultValues: {
-      document_type: "C.C",
+      document_type: "ID_Card",
       id: "",
       email: "",
       username: "",
@@ -43,7 +44,8 @@ export default function SignUpForm({setErrorAction, setSuccessAction, step, setS
       full_name: "",
       password: "",
       confirm_password: "",
-      role_id: 1
+      role_id: 1,
+      tenant_id: 1
     }
   });
   const {handleSubmit, formState: {isValid}, watch, trigger, reset} = methods;
@@ -52,13 +54,13 @@ export default function SignUpForm({setErrorAction, setSuccessAction, step, setS
 
   const validateDocumentNumber = (value: string) => {
     switch (documentType) {
-      case "C.C":
-      case "C.E":
-      case "T.I":
+      case "ID_Card":
+      case "Foreign_ID":
+      case "Citizen_Card":
         return /^\d{6,10}$/.test(value) || "Debe tener entre 6 y 10 dígitos numéricos";
-      case "Pasaporte":
+      case "Passport":
         return /^[a-zA-Z0-9]{5,15}$/.test(value) || "Debe ser alfanumérico, 5-15 caracteres";
-      case "NIT":
+      case "Tax_ID":
         return /^\d{9,15}$/.test(value) || "Debe tener entre 9 y 15 dígitos numéricos";
       default:
         return "Tipo de documento inválido";
@@ -99,7 +101,7 @@ export default function SignUpForm({setErrorAction, setSuccessAction, step, setS
 
   const handleKeyDown = async (event: React.KeyboardEvent<HTMLFormElement>) => {
     if (event.key === "Enter") {
-      event.preventDefault(); // Evita el envío por defecto
+      event.preventDefault();
 
       const fieldsToValidate = fieldsByStep[step] || [];
       const valid = await trigger(fieldsToValidate);
@@ -127,11 +129,11 @@ export default function SignUpForm({setErrorAction, setSuccessAction, step, setS
               name="document_type"
               label="Tipo de documento"
               options={[
-                {label: "Cédula de Ciudadanía", value: "C.C"},
-                {label: "Cédula de Extranjería", value: "C.E"},
-                {label: "Tarjeta de Identidad", value: "T.I"},
-                {label: "Pasaporte", value: "Pasaporte"},
-                {label: "NIT", value: "NIT"},
+                {label: "Cédula de Ciudadanía", value: "ID_Card"},
+                {label: "Cédula de Extranjería", value: "Foreign_ID"},
+                {label: "Tarjeta de Identidad", value: "Citizen_Card"},
+                {label: "Pasaporte", value: "Passport"},
+                {label: "NIT", value: "Tax_ID"},
               ]}
               rules={{required: "El tipo de documento es obligatorio"}}
             />
@@ -211,15 +213,16 @@ export default function SignUpForm({setErrorAction, setSuccessAction, step, setS
 
           {step === 3 && (
             <div className="flex flex-col items-center">
-              <label className="text-sm text-neutral-500">
-                By registering, you agree to the {" "}
+              <label className="text-sm text-start text-neutral-500">
+                Al registrarte, aceptas la{" "}
                 <Link href="#" className="text-blue-600 hover:underline font-medium">
-                  privacy policy
+                  política de privacidad
                 </Link>{" "}
-                and {" "}
+                y los{" "}
                 <Link href="#" className="text-blue-600 hover:underline font-medium">
-                  terms of service.
+                  términos del servicio.
                 </Link>{" "}
+
               </label>
               <button
                 type="submit"

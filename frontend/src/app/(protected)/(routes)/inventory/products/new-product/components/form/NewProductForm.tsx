@@ -26,7 +26,6 @@ export default function NewProductForm({step, setStepAction}: NewProductFormProp
       price: 0,
       currency: "USD",
       sku: "",
-      project_tags: []
     }
   });
   const {register, handleSubmit, formState: {isValid}, watch, trigger, reset} = methods;
@@ -149,7 +148,7 @@ export default function NewProductForm({step, setStepAction}: NewProductFormProp
           {step === 2 && (
             <div className="flex flex-col gap-8 w-full">
               <h1 className="text-xl font-bold tracking-wide">
-                Precio
+                Media
               </h1>
               <div className="flex flex-row items-center gap-8">
                 <div className="w-full">

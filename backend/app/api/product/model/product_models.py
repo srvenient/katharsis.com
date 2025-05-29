@@ -1,6 +1,22 @@
-from sqlmodel import SQLModel, Field
-from typing import Optional
+from enum import Enum
+
+from sqlmodel import SQLModel, Field, Relationship
+from typing import Optional, List
 from datetime import datetime
+
+
+class CurrencyType(str, Enum):
+    COP = "COP"
+    USD = "USD"
+    EUR = "EUR"
+
+
+class Category(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str = Field(max_length=100)
+    tenant_id: int = Field(foreign_key="tenant.id", index=True)
+
+    products: List["Product"] = Relationship(back_populates="category")
 
 
 class ProductBase(SQLModel):
@@ -9,17 +25,23 @@ class ProductBase(SQLModel):
     description: Optional[str] = None
     purchase_price: float = Field(default=0.0, ge=0, description="Buy price")
     sale_price: float = Field(default=0.0, ge=0, description="Sell price")
+    currency: CurrencyType = Field(default=CurrencyType.COP, description="Currency type")
     current_stock: int = Field(default=0, ge=0)
     minimum_stock: int = Field(default=0, ge=0)
     last_updated: Optional[datetime] = None
+    category_id: Optional[int] = Field(default=None, foreign_key="category.id", description="Category ID")
 
 
 class Product(ProductBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
+    tenant_id: int = Field(foreign_key="tenant.id", index=True)
+
+    category: Optional[Category] = Relationship(back_populates="products")
 
 
 class ProductPublic(ProductBase):
     id: int
+    tenant_id: int
 
 
 class ProductsPublic(SQLModel):
@@ -28,7 +50,7 @@ class ProductsPublic(SQLModel):
 
 
 class ProductCreate(ProductBase):
-    pass  # Todos los campos necesarios ya están en ProductBase
+    tenant_id: int
 
 
 class ProductUpdate(SQLModel):
@@ -37,6 +59,8 @@ class ProductUpdate(SQLModel):
     description: Optional[str] = None
     purchase_price: Optional[float] = Field(default=None, ge=0)
     sale_price: Optional[float] = Field(default=None, ge=0)
+    currency: Optional[CurrencyType] = Field(default=None)
     current_stock: Optional[int] = Field(default=None, ge=0)
     minimum_stock: Optional[int] = Field(default=None, ge=0)
     last_updated: Optional[datetime] = None
+    category_id: Optional[int] = None
