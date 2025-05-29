@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import APIRouter, HTTPException, status
 from sqlmodel import Session
 
@@ -6,7 +8,7 @@ from app.api.product.model.product_models import (
     ProductCreate,
     ProductUpdate,
     ProductPublic,
-    ProductsPublic,
+    ProductsPublic, ProductRegister,
 )
 from app.api.product.repository.product_crud import (
     create_product,
@@ -15,20 +17,32 @@ from app.api.product.repository.product_crud import (
     update_product,
     delete_product,
 )
+from app.utils import generate_code
 
 router = APIRouter(prefix="/products", tags=["products"])
 
 
 @router.post("/", response_model=ProductPublic, status_code=status.HTTP_201_CREATED)
 def create_product_view(
-        product_in: ProductCreate,
+        product_in: ProductRegister,
         session: SessionDep,
         user: CurrentUser
 ):
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
 
-    return create_product(session=session, product_create=product_in)
+    tenant_id = user.tenant_id
+    if not tenant_id:
+        raise HTTPException(status_code=400, detail="User has no tenant assigned")
+
+    code = generate_code(product_in.category_id, product_in.description)
+
+    product_data = product_in.dict()
+    product_data["tenant_id"] = tenant_id
+    product_data["code"] = code
+    product_data["last_updated"] = datetime.now()
+
+    return create_product(session=session, product_create=ProductCreate(**product_data))
 
 
 @router.get("/{product_id}", response_model=ProductPublic)

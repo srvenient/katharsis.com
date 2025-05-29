@@ -1,25 +1,24 @@
 export type Inputs = {
   name: string;
-  weight: number;
   description: string;
-  category: string;
-  size: string;
-  image?: string;
-  price: number;
+  category_id: number;
+  current_stock: number;
+  minimum_stock: number;
+  purchase_price: number;
+  sale_price: number;
   currency: string;
-  sku: string;
 }
 
 export enum Step {
   Information = 1,
-  Media = 2,
+  Inventory = 2,
   Pricing = 3,
 }
 
 const fieldsByStep: Record<Step, readonly (keyof Inputs)[]> = {
-  [Step.Information]: ["name", "weight", "description", "category", "size"],
-  [Step.Media]: ["image"],
-  [Step.Pricing]: ["price", "currency", "sku"],
+  [Step.Information]: ["name", "description", "category_id"],
+  [Step.Inventory]: ["current_stock", "minimum_stock"],
+  [Step.Pricing]: ["purchase_price", "sale_price", "currency"],
 } as const;
 
 export function getFieldsByStep(step: Step): readonly (keyof Inputs)[] {

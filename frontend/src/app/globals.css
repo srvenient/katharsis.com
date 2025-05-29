@@ -34,7 +34,20 @@ body {
     input[type='password']::-webkit-textfield-decoration-container {
         display: none;
     }
+
+    /* Para navegadores basados en WebKit (Chrome, Safari, Edge) */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Para Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
 }
+
 
 .noise-overlay {
     background-image: url('/noise.avif');
