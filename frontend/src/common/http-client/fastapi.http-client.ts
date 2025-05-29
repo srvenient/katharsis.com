@@ -122,6 +122,25 @@ export class FastApiHttpClient extends BaseHttpClient {
       throw new ApiError("Error con el servidor", 500);
     }
   }
+
+  async createProduct(data: Record<string, unknown>): Promise<void> {
+    try {
+      await this.instance.post("/products", data, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err.response) {
+        throw new ApiError(
+          err.response.data?.detail ?? "Error al crear el producto",
+          err.response.status
+        );
+      }
+      throw new ApiError("Error con el servidor", 500);
+    }
+  }
+
 }
 
 export const fastApiHttpClient = new FastApiHttpClient();

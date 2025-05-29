@@ -24,7 +24,7 @@ export default function PasswordInput() {
         <input
           type={showPassword ? "text" : "password"}
           placeholder=" "
-          className={`peer w-full border border-neutral-400 px-4 py-3 outline-none text-sm text-neutral-900 placeholder-transparent focus:border-blue-500 focus:caret-blue-500`}
+          className={`appearance-none peer w-full border border-neutral-400 px-4 py-3 outline-none text-sm text-neutral-900 placeholder-transparent focus:border-blue-500 focus:caret-blue-500`}
           {...register(name, {
             required: "Contraseña es requerida.",
             minLength: {

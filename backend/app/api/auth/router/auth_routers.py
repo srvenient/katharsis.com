@@ -34,11 +34,14 @@ def login_access_token(
         session=session, email=form_data.username, password=form_data.password
     )
     if not user:
+        print("User not found or password incorrect")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="The email/username or password is incorrect",
         )
+
     if not user.is_active:
+        print("User is inactive")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="User is inactive",
@@ -71,13 +74,18 @@ def register(
     Register a new user
     """
     user = user_crud.get_user_by_email(session=session, email=str(user_create.email))
+
+    print(user)
     if user:
+        print("User already exists with this email")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="El usuario ya existe con ese correo electrónico",
         )
+
     try:
         user = user_crud.create_user(session=session, user_create=user_create)
+        print(user)
     except IntegrityError:
         session.rollback()
         raise HTTPException(
