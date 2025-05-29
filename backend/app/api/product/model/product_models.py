@@ -50,6 +50,17 @@ class ProductCreate(ProductBase):
     tenant_id: int
 
 
+class ProductRegister(SQLModel):
+    name: str = Field(max_length=100)
+    description: Optional[str] = None
+    purchase_price: float = Field(default=0.0, ge=0)
+    sale_price: float = Field(default=0.0, ge=0)
+    currency: CurrencyType = Field(default=CurrencyType.COP)
+    current_stock: int = Field(default=0, ge=0)
+    minimum_stock: int = Field(default=0, ge=0)
+    category_id: Optional[int] = None
+
+
 class ProductUpdate(SQLModel):
     code: Optional[str] = Field(default=None, max_length=20)
     name: Optional[str] = Field(default=None, max_length=100)
