@@ -1,17 +1,10 @@
-from datetime import datetime
-from enum import Enum
-
 from pydantic import EmailStr
 from sqlmodel import SQLModel, Field, Relationship
-from typing import Optional, List
+from typing import Optional, TYPE_CHECKING, List
+from enum import Enum
 
-
-class Tenant(SQLModel, table=True):
-    id: int = Field(default=None, primary_key=True)
-    name: str = Field(max_length=255)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-
-    users: List["User"] = Relationship(back_populates="tenant")
+if TYPE_CHECKING:
+    from app.api.tenant.model.tenant_models import Tenant
 
 
 class RoleBase(SQLModel):
@@ -29,11 +22,11 @@ class RolePublic(RoleBase):
 
 
 class DocumentType(str, Enum):
-    ID_CARD = "ID_Card"            # CC
-    FOREIGN_ID = "Foreign_ID"      # CE
-    PASSPORT = "Passport"          # PASAPORTE
+    ID_CARD = "ID_Card"  # CC
+    FOREIGN_ID = "Foreign_ID"  # CE
+    PASSPORT = "Passport"  # PASAPORTE
     CITIZEN_CARD = "Citizen_Card"  # TI
-    TAX_ID = "Tax_ID"              # NIT
+    TAX_ID = "Tax_ID"  # NIT
 
 
 class UserBase(SQLModel):
@@ -87,8 +80,8 @@ class User(UserBase, table=True):
     hashed_password: str = Field(repr=False)
     role_id: Optional[int] = Field(default=None, foreign_key="role.id")
 
-    role: Optional["Role"] = Relationship(back_populates="users")
     tenant: Optional["Tenant"] = Relationship(back_populates="users")
+    role: Optional["Role"] = Relationship(back_populates="users")
 
 
 class UserPublic(UserBase):

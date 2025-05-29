@@ -1,22 +1,18 @@
+from datetime import datetime
 from enum import Enum
+from typing import Optional, TYPE_CHECKING
 
 from sqlmodel import SQLModel, Field, Relationship
-from typing import Optional, List
-from datetime import datetime
+
+if TYPE_CHECKING:
+    from app.api.category.model.category_models import Category
+    from app.api.tenant.model.tenant_models import Tenant
 
 
 class CurrencyType(str, Enum):
     COP = "COP"
     USD = "USD"
     EUR = "EUR"
-
-
-class Category(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    name: str = Field(max_length=100)
-    tenant_id: int = Field(foreign_key="tenant.id", index=True)
-
-    products: List["Product"] = Relationship(back_populates="category")
 
 
 class ProductBase(SQLModel):
@@ -36,7 +32,8 @@ class Product(ProductBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     tenant_id: int = Field(foreign_key="tenant.id", index=True)
 
-    category: Optional[Category] = Relationship(back_populates="products")
+    tenant: Optional["Tenant"] = Relationship(back_populates="products")
+    category: Optional["Category"] = Relationship(back_populates="products")
 
 
 class ProductPublic(ProductBase):
