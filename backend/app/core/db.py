@@ -1,6 +1,7 @@
 from sqlmodel import create_engine, Session, select
 
-from app.api.user.model.user_models import Role, Tenant
+from app.api.user.model.user_models import Role
+from app.api.tenant.model.tenant_models import Tenant
 from app.core.config import settings
 
 engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
