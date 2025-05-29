@@ -5,15 +5,8 @@ import React, { useEffect, useRef } from 'react';
 import $ from 'jquery';
 import "datatables.net";
 import {columns} from "@/app/(protected)/(routes)/inventory/components/table/Table.data";
+import {Product} from "@/common/types/product";
 
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  sale_price: number;
-  current_stock: number;
-  minimum_stock: number;
-}
 
 interface ApiResponse {
   data: Product[];
@@ -49,7 +42,8 @@ export default function MyDataTable() {
         <th>ID</th>
         <th>Nombre del producto</th>
         <th>Descripción</th>
-        <th>Precio unitario</th>
+        <th>Precio de compra</th>
+        <th>Precio de venta</th>
         <th>Stock actual</th>
         <th>Stock mínimo</th>
       </tr>
