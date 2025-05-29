@@ -4,6 +4,7 @@ import config from "@/config/config";
 import axios from "axios";
 import {User} from "@/common/types/user";
 import {Category} from "@/common/types/category";
+import {Product} from "@/common/types/product";
 
 export class FastApiHttpClient extends BaseHttpClient {
   constructor() {
@@ -144,6 +145,29 @@ export class FastApiHttpClient extends BaseHttpClient {
         console.error("Detalle del error:", err.response.data);
         throw new ApiError(
           err.response.data?.detail ?? "Error al crear el producto",
+          err.response.status
+        );
+      }
+      throw new ApiError("Error con el servidor", 500);
+    }
+  }
+
+
+  async getAllProducts({skip, limit}: { skip: number, limit: number }): Promise<{ data: Product[], total: number }> {
+    try {
+      const response = await this.instance.get(`/products?skip=${skip}&limit=${limit}`, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      return {
+        data: response.data.data as Product[],
+        total: response.data.count as number
+      };
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err.response) {
+        throw new ApiError(
+          err.response.data?.detail ?? "Error al obtener los productos",
           err.response.status
         );
       }

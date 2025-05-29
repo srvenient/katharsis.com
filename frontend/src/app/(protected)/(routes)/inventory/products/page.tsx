@@ -1,10 +1,24 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import {useEffect, useState} from "react";
+import {Product} from "@/common/types/product";
+import {fastApiHttpClient} from "@/common/http-client/fastapi.http-client";
 
-const MyDataTable = dynamic(() => import('../components/table/Table'), { ssr: false });
+const MyDataTable = dynamic(() => import('../components/table/Table'), {ssr: false});
 
 export default function ProductList() {
+  const [data, setData] = useState<Product[]>([]);
+
+  useEffect(() => {
+    fastApiHttpClient.getAllProducts({skip: 0, limit: 10})
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+      });
+  }, []);
 
   return (
     <div className="relative flex flex-col gap-10 ml-10 mt-30 z-30 w-full">
@@ -25,37 +39,25 @@ export default function ProductList() {
             <th className="px-6 py-3">Nombre del producto</th>
             <th className="px-6 py-3">Descripción del producto</th>
             <th className="px-6 py-3">Categoría</th>
-            <th className="px-6 py-3">Precio unitario</th>
+            <th className="px-6 py-3">Precio de venta</th>
             <th className="px-6 py-3">Stock actual</th>
             <th className="px-6 py-3">Stock mínimo permitido</th>
           </tr>
           </thead>
           <tbody className="bg-[#0f1535] divide-y divide-white/10">
-          {/* es un ejemplo, no sé si quedaia asi exactamente para conectar la bd */}
-          <tr>
-            <td className="px-6 py-4">1</td>
-            <td className="px-6 py-4">Celuar A312 234</td>
-            <td className="px-6 py-4">Referencia completa Samsng S24 aqwe124erwerrwewerewrwer</td>
-            <td className="px-6 py-4">Técnología</td>
-            <td className="px-6 py-4">$2.500.000</td>
-            <td className="px-6 py-4">10</td>
-            <td className="px-6 py-4">3</td>
-          </tr>
-          <tr>
-            <td className="px-6 py-4">1</td>
-            <td className="px-6 py-4">Celuar A312 234</td>
-            <td className="px-6 py-4">Referencia completa Samsng S24 aqwe124erwerrwewerewrwer</td>
-            <td className="px-6 py-4">Técnología</td>
-            <td className="px-6 py-4">$2.500.000</td>
-            <td className="px-6 py-4">10</td>
-            <td className="px-6 py-4">3</td>
-          </tr>
+          {data.map((product: Product) => (
+            <tr key={product.id}>
+              <td className="px-6 py-4">{product.id}</td>
+              <td className="px-6 py-4">{product.name}</td>
+              <td className="px-6 py-4">{product.description}</td>
+              <td className="px-6 py-4">{product.category_id}</td>
+              <td className="px-6 py-4">${product.sale_price}</td>
+              <td className="px-6 py-4">{product.current_stock}</td>
+              <td className="px-6 py-4">{product.minimum_stock}</td>
+            </tr>
+          ))}
           </tbody>
-
         </table>
-        <MyDataTable>
-
-        </MyDataTable>
       </div>
     </div>
   );
