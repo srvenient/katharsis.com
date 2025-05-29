@@ -1,6 +1,6 @@
 "use client";
 
-import {categories, navItems} from "@/app/(protected)/(routes)/dashboard/components/navigation/Sidebar.data";
+import {categories, navItems} from "@/app/(protected)/components/sidebar/Sidebar.data";
 import React, {useState} from "react";
 import {
   ChevronDown,
@@ -40,17 +40,23 @@ export default function Sidebar() {
     <div className={`h-screen py-5 pl-4 box-border z-30 ${jakarta.className}`}>
       <aside
         className="flex flex-col justify-between w-62 h-full
-          rounded-2xl bg-[linear-gradient(to_bottom,rgba(6,11,40,0.94)_19.41%,rgba(10,14,35,0.84)_76.65%)]
+          rounded-2xl bg-transparent
           text-white z-30"
       >
         <div className="overflow-y-auto max-w-screen px-2">
-          <div className="flex justify-center items-center gap-1.5 px-4 py-4 mt-2">
-            <PackageOpen size={26} strokeWidth={2}/>
-            <span className="text-xl font-special font-bold tracking-widest">Katharsis</span>
-          </div>
-          <div
-            className="w-4/5 h-0.5 mx-auto bg-gradient-to-r from-transparent via-white/40 to-transparent"
-          >
+          <div className="flex flex-col items-center">
+            <div className="flex justify-center items-center gap-2 px-4 py-4 mt-2">
+              <img
+                src="/images/icon.webp"
+                alt="Katharsis Logo"
+                width={24}
+                height={24}
+              />
+              <span className="text-lg tracking-widest">Katharsis</span>
+            </div>
+            <div
+              className="w-4/5 h-0.5 mx-auto bg-gradient-to-r from-transparent via-white/20 to-transparent"
+            />
           </div>
           <div className="mt-2 p-2 md:p-6">
             <div className="flex flex-col -gap-2">

@@ -63,10 +63,18 @@ def read_product_by_id(
 @router.get("/", response_model=ProductsPublic)
 def read_all_products(
         session: SessionDep,
+        user: CurrentUser,
         skip: int = 0,
         limit: int = 100,
 ):
-    products = get_all_products(session=session, skip=skip, limit=limit)
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    tenant_id = user.tenant_id
+    if not tenant_id:
+        raise HTTPException(status_code=400, detail="User has no tenant assigned")
+
+    products = get_all_products(session=session, tenant_id=tenant_id, skip=skip, limit=limit)
     return {"data": products, "count": len(products)}
 
 
