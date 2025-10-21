@@ -5,32 +5,30 @@ description = "In a world where efficiency and organization are key to success, 
 readme = "README.md"
 requires-python = ">=3.13, <4.0"
 dependencies = [
-    "fastapi[standard]<1.0.0,>=0.115.11",
-    "python-multipart<1.0.0,>=0.0.7",
-    "pydantic<3.0.0,>=2.10.6",
-    "pydantic-settings>=2.8.1",
-    "alembic<2.0.0,>=1.12.1",
-    "passlib[bcrypt]<2.0.0,>=1.7.4",
-    "psycopg[binary]<4.0.0,>=3.2.6",
-    "sqlmodel<1.0.0,>=0.0.24",
-    "bcrypt<4.0.0,>=3.2.0",
-    "pyjwt<3.0.0,>=2.10.1",
-    "sentry-sdk[fastapi]<3.0.0,>=2.22.0",
-    "tenacity>=9.0.0",
-    "email-validator<3.0.0.0,>=2.1.0.post1",
-    "emails<1.0,>=0.6",
-    "httpx<1.0.0,>=0.25.1",
-    "jinja2<4.0.0,>=3.1.6",
+    "alembic>=1.16.5",
+    "fastapi[standard]>=0.116.1",
+    "httpx>=0.28.1",
+    "passlib[bcrypt]>=1.7.4",
+    "psycopg[binary]>=3.2.9",
+    "pydantic>=2.11.7",
+    "pydantic-settings>=2.10.1",
+    "pyjwt>=2.10.1",
+    "pyotp>=2.9.0",
+    "python-jose[cryptography]>=3.5.0",
+    "sentry-sdk[fastapi]>=2.34.1",
+    "slowapi>=0.1.9",
+    "sqlmodel>=0.0.24",
+    "tenacity>=9.1.2",
 ]
 
 [tool.uv]
 dev-dependencies = [
-    "pytest<8.0.0,>=7.4.3",
-    "mypy<2.0.0,>=1.8.0",
-    "ruff<1.0.0,>=0.2.2",
-    "pre-commit<4.0.0,>=3.6.2",
-    "types-passlib<2.0.0.0,>=1.7.7.20240106",
-    "coverage<8.0.0,>=7.4.3",
+    "pytest>=8.4.1",
+    "mypy>=1.17.1",
+    "ruff>=0.12.8",
+    "pre-commit>=4.3.0",
+    "types-passlib>=1.7.7.20250602",
+    "coverage>=7.10.3",
 ]
 
 [build-system]
