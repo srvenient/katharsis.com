@@ -1,27 +1,21 @@
-from typing import Generator, Annotated, Type, Optional
+# app/api/shared/infrastructure/dependencies.py
 
-import jwt
-from fastapi import Depends, HTTPException
-from fastapi.params import Cookie
-from jwt.exceptions import InvalidTokenError
-from pydantic import ValidationError
+from typing import Generator, Annotated
+from fastapi import Depends, Request, HTTPException, status
 from sqlmodel import Session
-from starlette import status
 
-from app.api.auth.model.token_models import TokenPayload
-from app.api.user.model.user_models import User
-from app.core.config import settings
 from app.core.db import engine
-from app.core.security import ALGORITHM
+from app.api.role.application.role_service import RoleService
+from app.api.user.application.auth_service import AuthService
+from app.api.tenant.application.tenant_service import TenantService
+from app.api.shared.aggregate.infrastructure.repository.sql.sql_alchemy_aggregate_root_repository import (
+    SQLAlchemyAggregateRootRepository,
+)
+from app.api.user.domain.user_models import User
+from app.api.role.domain.role_models import Role
+from app.api.tenant.domain.tenant_models import Tenant
 
-
-def get_token_from_cookie(access_token: Optional[str] = Cookie(None)) -> str:
-    if not access_token:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated"
-        )
-    return access_token
+from app.api.shared.infrastructure.context import AppContext
 
 
 def get_db() -> Generator[Session, None, None]:
@@ -32,29 +26,66 @@ def get_db() -> Generator[Session, None, None]:
 SessionDep = Annotated[Session, Depends(get_db)]
 
 
-def get_current_user(session: SessionDep, token: Annotated[str, Depends(get_token_from_cookie)]) -> Type[User]:
+def get_user_repo(session: SessionDep):
+    return SQLAlchemyAggregateRootRepository[User](session, User)
+
+
+def get_role_repo(session: SessionDep):
+    return SQLAlchemyAggregateRootRepository[Role](session, Role)
+
+
+def get_tenant_repo(session: SessionDep):
+    return SQLAlchemyAggregateRootRepository[Tenant](session, Tenant)
+
+
+def get_role_service(role_repo=Depends(get_role_repo)) -> RoleService:
+    return RoleService(role_repo)
+
+
+def get_tenant_service(
+        tenant_repo=Depends(get_tenant_repo),
+) -> TenantService:
+    return TenantService(tenant_repo)
+
+
+def get_auth_service(
+        user_repo=Depends(get_user_repo),
+        role_service=Depends(get_role_service),
+        tenant_service=Depends(get_tenant_repo)
+) -> AuthService:
+    return AuthService(user_repo, role_service, tenant_service)
+
+
+async def get_app_context(
+        request: Request,
+        tenant_service: TenantService = Depends(get_tenant_service),
+        role_service: RoleService = Depends(get_role_service),
+        auth_service: AuthService = Depends(get_auth_service),
+) -> AppContext:
+    ctx = AppContext(
+        tenant_service=tenant_service,
+        role_service=role_service,
+        auth_service=auth_service,
+    )
+
     try:
-        payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=[ALGORITHM]
-        )
-        token_data = TokenPayload(**payload)
-    except(InvalidTokenError, ValidationError):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Could not validate credentials"
-        )
-    user = session.get(User, token_data.sub)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found"
-        )
-    if not user.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User is inactive"
-        )
-    return user
+        token = request.cookies.get("access_token")
+        if token:
+            user = await auth_service.get_current_user_from_token(token)
+            if not user:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Invalid access token",
+                )
+
+            ctx.current_user = user
+            ctx.current_tenant = await tenant_service.get_tenant_by_user(user)
+    except Exception as e:
+        print(e)
+        ctx.current_tenant = None
+        ctx.current_user = None
+
+    return ctx
 
 
-CurrentUser = Annotated[User, Depends(get_current_user)]
+AppContextDep = Annotated[AppContext, Depends(get_app_context)]

@@ -1,4 +1,6 @@
-from fastapi import FastAPI
+import time
+
+from fastapi import FastAPI, Request
 from fastapi.routing import APIRoute
 from starlette.middleware.cors import CORSMiddleware
 

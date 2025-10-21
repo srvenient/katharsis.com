@@ -1,4 +1,3 @@
-import os
 from logging.config import fileConfig
 
 from alembic import context
@@ -20,10 +19,6 @@ fileConfig(config.config_file_name)
 # target_metadata = None
 
 from app.core.config import settings
-from app.api.tenant.model import tenant_models
-from app.api.user.model import user_models
-from app.api.product.model import product_models
-from app.api.category.model import category_models
 from sqlmodel import SQLModel
 
 target_metadata = SQLModel.metadata

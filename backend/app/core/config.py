@@ -27,9 +27,23 @@ class Settings(BaseSettings):
     PROJECT_DESCRIPTION: str = "In a world where efficiency and organization are key to success, we present an Inventory Management System designed to streamline inventory control, reduce costs, and enhance productivity."
 
     API_V1_STR: str = "/api/v1"
+
+    ENV: str = "development"  # one of "development", "production", "testing"
+
     SECRET_KEY: str = secrets.token_urlsafe(32)
-    # 60 minutes * 24 hours * 8 days = 8 days
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 15  # minutes
+    ALGORITHM: str = "HS256"
+
+    FAILED_LOGIN_ATTEMPTS: int = 5
+    LOCKOUT_DURATION_MINUTES: int = 15  # minutes
+
+    OAUTH2_TOKEN_URL: str = API_V1_STR + "/auth/login"
+    OAUTH2_SCOPES: dict = {
+        "read": "Read access",
+        "write": "Write access",
+        "admin": "Admin access",
+    }
+
     FRONTEND_HOST: str = "http://localhost:5173"
 
     BACKEND_CORS_ORIGINS: Annotated[
@@ -75,7 +89,7 @@ class Settings(BaseSettings):
 
     @computed_field  # type: ignore[prop-decorator]
     @property
-    def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:
+    def SQLALCHEMY_DATABASE_URI(self) -> MultiHostUrl:
         return MultiHostUrl.build(
             scheme="postgresql+psycopg",
             username=self.POSTGRES_USER,

@@ -1,0 +1,32 @@
+from typing import Annotated
+
+from fastapi import APIRouter, Response, Depends, status
+from fastapi.security import OAuth2PasswordRequestForm
+
+from app.api.deps import AppContextDep
+from app.api.user.domain.user_models import UserCreate
+
+router = APIRouter(prefix="/auth", tags=["Auth"])
+
+
+@router.post("/register", status_code=201)
+async def register(
+        ctx: AppContextDep,
+        user_create: UserCreate,
+):
+    return await ctx.auth_service.register_user(user_create)
+
+
+@router.post("/login")
+async def login(
+        response: Response,
+        form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+        ctx: AppContextDep
+):
+    return await ctx.auth_service.authenticate_user(response, form_data)
+
+
+@router.post("/logout", status_code=204)
+async def logout(response: Response):
+    response.delete_cookie(key="access_token")
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
