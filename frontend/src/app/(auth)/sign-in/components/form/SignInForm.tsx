@@ -8,7 +8,7 @@ import EmailInput from '@/app/(auth)/components/form/input/EmailInput';
 import { useAppDispatch } from '@/common/redux/hooks';
 import { login } from '@/common/redux/features/auth/slices/auth.slice';
 import { useEffect, useState } from 'react';
-import ErrorModal from '../modal/ErrorModal';
+import ErrorModal from '@/app/(auth)/components/modal/ErrorModal';
 
 type FormValues = {
   username: string;
@@ -32,7 +32,7 @@ export default function SignInForm() {
   const onSubmit: SubmitHandler<FormValues> = async (data: FormValues) => {
     try {
       const res = await dispatch(login(data)).unwrap();
-      if (res) router.push('/dashboard');
+      if (res) router.push('/onboarding');
       else setError('Login failed. Please try again.');
     } catch {
       setError('Login failed. Please try again.');
@@ -48,9 +48,16 @@ export default function SignInForm() {
 
   return (
     <div className="relative flex flex-col items-center justify-center w-full min-h-screen px-5 sm:px-0">
-      {error && <ErrorModal message={error} onClose={() => setError(null)} />}
+      {error && (
+        <ErrorModal
+          message={error}
+          textButton="OK"
+          autoClose={5000}
+          onClose={() => setError(null)}
+          closeOnBackdropClick
+        />
+      )}
 
-      {/* Contenido del formulario */}
       <div className="relative w-full max-w-lg flex flex-col items-center lg:items-start justify-center gap-12">
         <div className="flex flex-col items-center lg:items-start justify-start gap-2 -mt-28">
           <h2 className="text-white text-4xl font-special font-bold">

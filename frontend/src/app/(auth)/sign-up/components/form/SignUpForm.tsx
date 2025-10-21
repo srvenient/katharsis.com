@@ -15,8 +15,8 @@ import PasswordInput from '@/app/(auth)/components/form/input/PasswordInput';
 import { useState } from 'react';
 import { useAppDispatch } from '@/common/redux/hooks';
 import { register } from '@/common/redux/features/auth/slices/auth.slice';
-import SuccessModal from '../modal/SuccessModal';
-import ErrorModal from '../modal/ErrorModal';
+import SuccessModal from '../../../components/modal/SuccessModal';
+import ErrorModal from '../../../components/modal/ErrorModal';
 
 enum DOCUMENT_TYPE {
   ID_CARD = 'ID_Card',
@@ -81,6 +81,8 @@ export default function SignUpForm() {
       const res = await dispatch(register(data)).unwrap();
       if (res) {
         setSuccess(true);
+        setStep(0);
+        methods.reset();
       }
     } catch (error: any) {
       setError(
@@ -92,9 +94,26 @@ export default function SignUpForm() {
   return (
     <div className="flex flex-col items-center justify-start min-h-screen w-full px-5 sm:px-0 pt-28 pb-10">
       {success && (
-        <SuccessModal show={success} onClose={() => setSuccess(false)} />
+        <SuccessModal
+          show={success}
+          title="Account Created!"
+          message="Your account has been successfully created."
+          textButton="Go to Sign In"
+          onClose={() => setSuccess(false)}
+          buttonAction={() => router.push('/sign-in')}
+          autoClose={4000}
+          closeOnBackdropClick
+        />
       )}
-      {error && <ErrorModal message={error} onClose={() => setError(null)} />}
+      {error && (
+        <ErrorModal
+          message={error}
+          textButton="OK"
+          autoClose={5000}
+          onClose={() => setError(null)}
+          closeOnBackdropClick
+        />
+      )}
 
       <div className="w-full max-w-lg flex flex-col items-center lg:items-start gap-12 relative">
         <div className="flex flex-col items-center justify-center gap-4">
@@ -128,7 +147,6 @@ export default function SignUpForm() {
               or
             </p>
 
-            {/* Form */}
             <Form<FormValues>
               methods={methods}
               onSubmit={onSubmit}
@@ -180,7 +198,6 @@ export default function SignUpForm() {
                 </>
               )}
 
-              {/* Botones */}
               <div
                 className={`flex mt-2 gap-4 ${
                   step === 0 || step === 2

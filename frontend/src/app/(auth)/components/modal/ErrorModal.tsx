@@ -2,27 +2,39 @@
 
 import { useEffect, useState } from 'react';
 
+type ErrorModalProps = {
+  message: string;
+  textButton?: string;
+  autoClose?: number;
+  onClose?: () => void;
+  closeOnBackdropClick?: boolean;
+};
+
 export default function ErrorModal({
   message,
+  textButton = 'Cerrar',
+  autoClose = 3000,
   onClose,
-}: {
-  message: string;
-  onClose: () => void;
-}) {
+  closeOnBackdropClick = false,
+}: ErrorModalProps) {
   const [visible, setVisible] = useState(!!message);
 
+  // Manejo de visibilidad y autocierre
   useEffect(() => {
     if (message) {
       setVisible(true);
-      const timer = setTimeout(() => {
-        setVisible(false);
-        setTimeout(() => {
-          onClose();
-        }, 300);
-      }, 3000);
-      return () => clearTimeout(timer);
+
+      if (autoClose) {
+        const timer = setTimeout(() => handleClose(), autoClose);
+        return () => clearTimeout(timer);
+      }
     }
-  }, [message, onClose]);
+  }, [message]);
+
+  const handleClose = () => {
+    setVisible(false);
+    setTimeout(() => onClose?.(), 300);
+  };
 
   if (!message && !visible) return null;
 
@@ -32,8 +44,9 @@ export default function ErrorModal({
         fixed inset-0 z-50 flex items-center justify-center
         bg-black/60 backdrop-blur-sm
         transition-opacity duration-300
-        ${visible ? 'opacity-100' : 'opacity-0'}
+        ${visible ? 'opacity-100' : 'opacity-0 pointer-events-none'}
       `}
+      onClick={closeOnBackdropClick ? handleClose : undefined}
     >
       <div
         className={`
@@ -45,6 +58,7 @@ export default function ErrorModal({
           transform transition-all duration-300
           ${visible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}
         `}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Ícono + mensaje */}
         <div className="flex flex-col items-center justify-center text-center gap-3">
@@ -64,16 +78,15 @@ export default function ErrorModal({
               />
             </svg>
           </div>
+
           <h3 className="text-lg font-semibold text-red-300">Error</h3>
           <p className="text-sm text-red-100/80 max-w-xs">{message}</p>
         </div>
 
+        {/* Botón */}
         <div className="mt-6 flex justify-center">
           <button
-            onClick={() => {
-              setVisible(false);
-              setTimeout(() => onClose(), 300);
-            }}
+            onClick={handleClose}
             className="
               px-6 py-2 rounded-lg
               bg-linear-to-r from-red-500/90 to-red-600/90
@@ -84,7 +97,7 @@ export default function ErrorModal({
               cursor-pointer
             "
           >
-            OK
+            {textButton}
           </button>
         </div>
 

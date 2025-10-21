@@ -1,31 +1,57 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+
+type SuccessModalProps = {
+  /** Controla si el modal está visible */
+  show: boolean;
+
+  /** Título del modal (por defecto: "Success!") */
+  title?: string;
+
+  /** Mensaje del modal */
+  message?: string;
+
+  /** Texto del botón */
+  textButton?: string;
+
+  /** Acción personalizada al presionar el botón */
+  buttonAction?: () => void;
+
+  /** Se ejecuta al cerrar el modal */
+  onClose?: () => void;
+
+  /** Tiempo de autocierre en ms (por defecto 3000). Si es null, no se cierra solo */
+  autoClose?: number | null;
+
+  /** Permite cerrar al hacer clic en el fondo */
+  closeOnBackdropClick?: boolean;
+};
 
 export default function SuccessModal({
   show,
+  title = 'Success!',
+  message = 'Operation completed successfully.',
+  textButton = 'Continue',
+  buttonAction,
   onClose,
-}: {
-  show: boolean;
-  onClose: () => void;
-}) {
+  autoClose = 3000,
+  closeOnBackdropClick = false,
+}: SuccessModalProps) {
   const [visible, setVisible] = useState(show);
-  const router = useRouter();
 
   useEffect(() => {
-    if (show) {
-      setVisible(true);
-      const timer = setTimeout(() => {
-        setVisible(false);
-        setTimeout(() => {
-          onClose();
-          router.push('/sign-in');
-        }, 300);
-      }, 3000);
+    setVisible(show);
+    if (show && autoClose) {
+      const timer = setTimeout(() => handleClose(), autoClose);
       return () => clearTimeout(timer);
     }
-  }, [show, onClose, router]);
+  }, [show, autoClose]);
+
+  const handleClose = () => {
+    setVisible(false);
+    setTimeout(() => onClose?.(), 300);
+  };
 
   if (!show && !visible) return null;
 
@@ -35,10 +61,12 @@ export default function SuccessModal({
         fixed inset-0 z-50 flex items-center justify-center
         bg-black/60 backdrop-blur-sm
         transition-opacity duration-300
-        ${visible ? 'opacity-100' : 'opacity-0'}
+        ${visible ? 'opacity-100' : 'opacity-0 pointer-events-none'}
       `}
+      onClick={closeOnBackdropClick ? handleClose : undefined}
     >
       <div
+        onClick={(e) => e.stopPropagation()}
         className={`
           relative w-[90%] max-w-sm
           bg-linear-to-b from-emerald-800/90 to-emerald-900/80
@@ -67,22 +95,18 @@ export default function SuccessModal({
               />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-emerald-300">
-            Registration Successful!
-          </h3>
-          <p className="text-sm text-emerald-100/80 max-w-xs">
-            Your account has been created successfully. Redirecting to sign
-            in...
-          </p>
+          <h3 className="text-lg font-semibold text-emerald-300">{title}</h3>
+          <p className="text-sm text-emerald-100/80 max-w-xs">{message}</p>
         </div>
 
+        {/* Botón */}
         <div className="mt-6 flex justify-center">
           <button
             onClick={() => {
               setVisible(false);
               setTimeout(() => {
-                onClose();
-                router.push('/sign-in');
+                onClose?.();
+                buttonAction?.();
               }, 300);
             }}
             className="
@@ -95,7 +119,7 @@ export default function SuccessModal({
               cursor-pointer
             "
           >
-            Go to Sign In
+            {textButton}
           </button>
         </div>
 
