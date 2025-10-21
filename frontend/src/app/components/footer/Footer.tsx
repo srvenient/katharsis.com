@@ -9,7 +9,7 @@ export default function Footer() {
     <div className="flex items-center justify-center h-[700px] md:h-[920px] lg:h-[820px] w-full font-special">
       <footer className="relative flex items-center justify-center h-full w-full overflow-hidden">
         <div
-          className="absolute top-0 left-0 w-full h-full bg-[url('/hero-globe.svg')] bg-no-repeat bg-top bg-[length:100%] rotate-180 opacity-30 z-0 pointer-events-none"
+          className="absolute top-0 left-0 w-full h-full bg-[url('/hero-globe.svg')] bg-no-repeat bg-top bg-size-[100%] rotate-180 opacity-30 z-0 pointer-events-none"
         />
         <div
           className="absolute top-0 left-0 inset-0 w-full h-full bg-[url('/Orb-Footer.svg')] bg-no-repeat
