@@ -91,7 +91,7 @@ export default function Home() {
     <>
       <Header/>
       <main className="flex flex-col w-full overflow-hidden text-white">
-        <div ref={bgRef} className="relative w-full h-[100vh]">
+        <div ref={bgRef} className="relative w-full h-screen">
           <div className="sticky top-0 h-screen w-full overflow-hidden">
             <div
               className="absolute inset-0 w-full h-full bg-[url('/hero-globe.svg')] bg-cover bg-no-repeat opacity-25 z-0 pointer-events-none"
