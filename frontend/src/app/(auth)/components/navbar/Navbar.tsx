@@ -36,7 +36,6 @@ export function Navbar({ showBackground, buttonStyle }: NavbarProps) {
           />
         )}
 
-        {/* Logo */}
         <div className="flex items-center">
           <span
             className="
@@ -48,7 +47,6 @@ export function Navbar({ showBackground, buttonStyle }: NavbarProps) {
           </span>
         </div>
 
-        {/* Botón visible en pantallas grandes */}
         <div className="hidden sm:flex items-center gap-4">
           <button
             onClick={() => router.push('/prices')}
@@ -70,7 +68,6 @@ export function Navbar({ showBackground, buttonStyle }: NavbarProps) {
           </button>
         </div>
 
-        {/* Icono hamburguesa visible solo en pantallas pequeñas */}
         <button
           className="sm:hidden flex items-center justify-center text-white p-2 rounded-md hover:bg-white/10 transition-colors"
           onClick={toggleMenu}
@@ -78,7 +75,6 @@ export function Navbar({ showBackground, buttonStyle }: NavbarProps) {
           <Menu size={22} />
         </button>
 
-        {/* Menú desplegable móvil */}
         {isOpen && (
           <div className="absolute right-4 top-20 flex flex-col bg-white/10 backdrop-blur-md border border-white/30 rounded-xl p-4 sm:hidden">
             <button
