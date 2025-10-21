@@ -1,35 +1,34 @@
-import { ApiError } from "../errors/api-error";
-import type { AxiosInstance } from 'axios';
 import Axios from 'axios';
-import http from 'http';
-import * as https from 'https';
+import {AxiosInstance} from "axios";
+import {ApiError} from "@/common/errors/api-error";
+import * as https from "node:https";
+import * as http from "node:http";
 
 export type HttpClientConfig = {
   baseURL: string;
   timeout: number;
-  keepAlive: boolean;
-  withCredentials: boolean;
-}
+  keepAlive?: boolean;
+};
 
 export abstract class BaseHttpClient {
   protected readonly instance: AxiosInstance;
 
   protected constructor(options: HttpClientConfig) {
     if (!options.baseURL) {
-      throw new ApiError('baseUrl required', 500);
+      throw new ApiError('Base URL is required', 500);
     }
 
-    const httpAgent = new http.Agent({ keepAlive: options.keepAlive ?? true });
+    const httpAgent = new http.Agent({keepAlive: options.keepAlive ?? true});
     const httpsAgent = new https.Agent({
       keepAlive: options.keepAlive ?? true,
     });
 
     this.instance = Axios.create({
       baseURL: options.baseURL,
-      timeout: options.timeout,
+      timeout: options.timeout ?? 5000,
+      withCredentials: true,
       httpAgent,
       httpsAgent,
-      withCredentials: options.withCredentials,
     });
   }
 }

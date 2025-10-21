@@ -4,10 +4,10 @@ import gsap from 'gsap';
 import {ScrollTrigger} from 'gsap/ScrollTrigger';
 import React, {useEffect} from "react";
 import Lenis from 'lenis';
-import Button from "@/components/ui/button/Button";
+import Button from "@/app/components/ui/button/Button";
 import {useRouter} from "next/navigation";
-import Header from "@/components/header/Header";
-import Footer from "@/components/footer/Footer";
+import Header from "@/app/components/header/Header";
+import Footer from "@/app/components/footer/Footer";
 
 gsap.registerPlugin(ScrollTrigger);
 

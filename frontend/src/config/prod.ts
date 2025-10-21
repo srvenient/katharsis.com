@@ -1,4 +1,4 @@
-import { AppConfig } from "./config";
+import { AppConfig } from ".";
 import { EnvironmentEnum } from "@/common/env";
 
 export default {

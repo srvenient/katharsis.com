@@ -1,88 +1,95 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @import 'lenis/dist/lenis.css';
 
 @theme {
-    --font-special: "Roobert", Arial, sans-serif;
+  --font-special: 'Roobert', Arial, sans-serif;
 
-    --color-theme-pink: oklch(0.82 0.0852 1.34);
-    --color-theme-rosewood: oklch(0.55 0.0538 355.7);
-    --color-theme-charcoal: oklch(0.18 0.0188 274.65);
-    --color-theme-cream: oklch(0.93 0.0529 97.92);
-    --color-theme-light: oklch(0.96 0 0);
+  --color-theme-midnight: #10151b;
+  --color-theme-midnight-blue: rgb(15, 21, 53);
+  --color-theme-dodger-blue: #2986ff;
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--color-theme-midnight);
+    color: white;
+    height: 100%;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    margin: 0;
+    width: 100%;
+  }
+
+  body {
+    font-family: var(--font-primary), sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  input[type='password']::-ms-reveal,
+  input[type='password']::-ms-clear {
+    display: none;
+  }
+
+  input[type='password']::-webkit-textfield-decoration-container {
+    display: none;
+  }
+
+  /* Para navegadores basados en WebKit (Chrome, Safari, Edge) */
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Para Firefox */
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
 }
 
 @font-face {
-    font-family: "Roobert";
-    src: url("/fonts/Roobert Regular.woff2") format("woff2");
-    font-weight: 400;
-    font-display: swap;
+  font-family: 'Roobert';
+  src: url('/fonts/Roobert Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
 }
-
-html,
-body {
-    font-family: var(--font-special), sans-serif;
-    background-color: var(--color-theme-charcoal);
-    color: var(--color-theme-light);
-}
-
-@layer utilities {
-    input[type='password']::-ms-reveal,
-    input[type='password']::-ms-clear {
-        display: none;
-    }
-
-    input[type='password']::-webkit-textfield-decoration-container {
-        display: none;
-    }
-
-    /* Para navegadores basados en WebKit (Chrome, Safari, Edge) */
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    /* Para Firefox */
-    input[type=number] {
-        -moz-appearance: textfield;
-    }
-}
-
 
 .noise-overlay {
-    background-image: url('/noise.avif');
-    background-repeat: repeat;
-    background-size: 200px;
-    animation: noiseMove 0.5s steps(1) infinite;
+  background-image: url('/noise.avif');
+  background-repeat: repeat;
+  background-size: 200px;
+  animation: noiseMove 0.5s steps(1) infinite;
 }
 
 @keyframes noiseMove {
-    0% {
-        background-position: 0 0;
-    }
-    25% {
-        background-position: 10% 5%;
-    }
-    50% {
-        background-position: 0 10%;
-    }
-    75% {
-        background-position: -10% -5%;
-    }
-    100% {
-        background-position: 0 0;
-    }
+  0% {
+    background-position: 0 0;
+  }
+  25% {
+    background-position: 10% 5%;
+  }
+  50% {
+    background-position: 0 10%;
+  }
+  75% {
+    background-position: -10% -5%;
+  }
+  100% {
+    background-position: 0 0;
+  }
 }
 
 .animate-marquee {
-    animation: marquee 40s linear infinite;
+  animation: marquee 40s linear infinite;
 }
 
 @keyframes marquee {
-    0% {
-        transform: translateX(0%);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }

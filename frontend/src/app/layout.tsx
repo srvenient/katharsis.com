@@ -1,10 +1,12 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import React from "react";
+import type { Metadata } from 'next';
+import './globals.css';
+import React from 'react';
+import StoreProvider from './components/redux/StoreProvider';
 
 export const metadata: Metadata = {
-  title: "Katharsis",
-  description: "In a world where efficiency and organization are key to success, we present an Inventory Management System designed to streamline inventory control, reduce costs, and enhance productivity.",
+  title: 'Katharsis',
+  description:
+    'In a world where efficiency and organization are key to success, we present an Inventory Management System designed to streamline inventory control, reduce costs, and enhance productivity.',
 };
 
 export default function RootLayout({
@@ -13,9 +15,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
+    <html lang="en">
       <body>
-        {children}
+        <StoreProvider>{children}</StoreProvider>
       </body>
     </html>
   );
