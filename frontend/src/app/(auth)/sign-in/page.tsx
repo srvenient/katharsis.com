@@ -13,7 +13,7 @@ export default function SignInPage() {
             bg-blend-multiply
           "
         />
-        <div className="w-full max-w-xs z-10">
+        <div className="w-full max-w-xs z-10 -mt-28">
           <SignInForm />
         </div>
       </div>
