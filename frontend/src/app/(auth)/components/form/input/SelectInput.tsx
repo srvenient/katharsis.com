@@ -68,7 +68,7 @@ export default function SelectInput({
         rules={rules}
         render={({ field }) => (
           <div
-            className="relative rounded-2xl p-[2px] transition-colors duration-150"
+            className="relative rounded-2xl p-0.5 transition-colors duration-150"
             style={{
               background:
                 'radial-gradient(94.43% 69.43%, rgb(255,255,255) 0%, rgba(255,255,255,0) 100%)',
