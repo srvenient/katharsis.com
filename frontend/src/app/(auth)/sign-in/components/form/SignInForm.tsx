@@ -74,7 +74,6 @@ export default function SignInForm() {
         )}
       </AnimatePresence>
       <div className="relative w-full max-w-lg flex flex-col items-center lg:items-start justify-center gap-10">
-        {/* HEADER */}
         <div className="flex flex-col items-center lg:items-start justify-start gap-2">
           <h2 className="text-white text-4xl font-special font-bold">
             Nice to see you!
@@ -84,7 +83,6 @@ export default function SignInForm() {
           </p>
         </div>
 
-        {/* FORM */}
         <Form<FormValues>
           methods={methods}
           onSubmit={onSubmit}
