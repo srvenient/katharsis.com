@@ -61,9 +61,11 @@ export default function SignInForm() {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25 }}
             layout
-            className="w-full flex items-center justify-center gap-2 p-2 
-                   rounded-md bg-red-500/10 border border-red-500/40 
-                   text-red-400 text-sm font-medium mb-4"
+            className="
+              w-full flex items-center justify-center gap-2 p-2 
+              rounded-md bg-red-500/10 border border-red-500/40 
+            text-red-400 text-sm font-medium mb-4
+            "
             role="alert"
           >
             <ExclamationTriangleIcon className="w-4 h-4 shrink-0" />
@@ -113,12 +115,12 @@ export default function SignInForm() {
             className={`
               w-full py-2.5 px-4 mt-2 flex items-center justify-center gap-2 
               rounded-xl text-white text-[11px] font-special font-semibold
-              transition-all duration-300 cursor-pointer
+              transition-all duration-300
               ${
                 isSubmitting
                   ? 'bg-blue-400 cursor-wait'
                   : isValid
-                  ? 'bg-theme-dodger-blue hover:bg-blue-600'
+                  ? 'bg-theme-dodger-blue hover:bg-blue-600 cursor-pointer'
                   : 'bg-gray-600 opacity-70 cursor-not-allowed'
               }
             `}

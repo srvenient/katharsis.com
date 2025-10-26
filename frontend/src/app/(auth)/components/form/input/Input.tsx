@@ -21,16 +21,12 @@ export default function Input({
   rules,
 }: InputProps) {
   const {
-    watch,
     register,
-    clearErrors,
     formState: { errors },
   } = useFormContext();
 
   const errorMessage = errors[name]?.message?.toString();
   const hasError = Boolean(errorMessage);
-
-  const value = watch(name);
 
   return (
     <div className="flex flex-col gap-3">
