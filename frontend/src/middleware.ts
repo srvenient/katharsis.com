@@ -1,10 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
+
+const PROTECTED_PATHS = ['/dashboard', '/onboarding'];
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get('access_token')?.value;
   const pathname = req.nextUrl.pathname;
 
-  if (pathname.startsWith('/dashboard')) {
+  if (PROTECTED_PATHS.some((path) => pathname.startsWith(path))) {
     if (!token) {
       return NextResponse.redirect(new URL('/sign-in', req.url));
     }
@@ -14,5 +16,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
-}
+  matcher: ['/dashboard/:path*', '/onboarding/:path*'],
+};
