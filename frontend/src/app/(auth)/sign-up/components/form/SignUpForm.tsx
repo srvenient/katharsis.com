@@ -65,19 +65,18 @@ export default function SignUpForm() {
   const [error, setError] = useState<string | null>(null);
 
   const handleNextStep = async (e?: React.MouseEvent<HTMLButtonElement>) => {
-  e?.preventDefault(); // 🔒 evita que el click propague al botón "submit"
-  e?.stopPropagation();
+    e?.preventDefault(); // 🔒 evita que el click propague al botón "submit"
+    e?.stopPropagation();
 
-  const stepFields: Record<number, (keyof FormValues)[]> = {
-    0: ['doc_type', 'doc_number'],
-    1: ['first_name', 'last_name', 'email'],
-    2: ['password', 'confirm_password'],
+    const stepFields: Record<number, (keyof FormValues)[]> = {
+      0: ['doc_type', 'doc_number'],
+      1: ['first_name', 'last_name', 'email'],
+      2: ['password', 'confirm_password'],
+    };
+
+    const isValidStep = await methods.trigger(stepFields[step]);
+    if (isValidStep) setStep((prev) => prev + 1);
   };
-
-  const isValidStep = await methods.trigger(stepFields[step]);
-  if (isValidStep) setStep((prev) => prev + 1);
-};
-
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     if (step < 2) return;
@@ -128,7 +127,6 @@ export default function SignUpForm() {
           </p>
         </div>
 
-        {/* CARD */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -136,7 +134,6 @@ export default function SignUpForm() {
           className="relative w-full p-0.5 rounded-3xl bg-linear-to-b from-gray-500 via-white to-gray-500"
         >
           <div className="flex flex-col w-full rounded-3xl bg-theme-midnight-blue p-10 gap-6 transition-all duration-500">
-            {/* SOCIAL SECTION */}
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -334,7 +331,6 @@ export default function SignUpForm() {
               </div>
             </Form>
 
-            {/* FOOTER */}
             <div className="w-full flex flex-col items-center justify-center gap-4 mt-4">
               <p className="text-sm text-gray-400">
                 Already have an account?{' '}
