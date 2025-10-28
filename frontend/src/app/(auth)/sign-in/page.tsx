@@ -9,8 +9,9 @@ export default function SignInPage() {
             absolute inset-0
             bg-[url('/images/body-background.webp'),linear-gradient(310deg,rgb(15,18,59)14.25%,rgb(9,13,46)56.45%,rgb(2,5,21)86.14%)]
             bg-cover
-            bg-center
+            bg-bottom
             bg-blend-multiply
+            blur-3xl
           "
         />
         <div className="w-full max-w-xs z-10 -mt-28">
