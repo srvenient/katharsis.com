@@ -27,3 +27,12 @@ async def login(
 @router.post("/logout", status_code=204)
 async def logout(response: Response):
     return await AuthService.logout_user(response)
+
+
+@router.post("/verify-2fa", status_code=200)
+async def verify_2fa(
+        response: Response,
+        code: str,
+        ctx: AppContextDep
+):
+    return await ctx.auth_service.verify_2fa_code(response, code, ctx)
