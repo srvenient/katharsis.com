@@ -10,14 +10,11 @@ router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @router.post("/register", status_code=201)
-async def register(
-        ctx: AppContextDep,
-        user_create: UserCreate,
-):
+async def register(ctx: AppContextDep, user_create: UserCreate, ):
     return await ctx.auth_service.register_user(user_create)
 
 
-@router.post("/login")
+@router.post("/login", status_code=200)
 async def login(
         response: Response,
         form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
@@ -27,6 +24,5 @@ async def login(
 
 
 @router.post("/logout", status_code=204)
-async def logout(response: Response):
-    response.delete_cookie(key="access_token")
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+async def logout(response: Response, ctx: AppContextDep):
+    return await ctx.auth_service.logout_user(response)

@@ -164,3 +164,11 @@ class AuthService:
         )
 
         return resp
+
+    async def logout_user(self, response: Response) -> JSONResponse:
+        response.delete_cookie(key="access_token")
+
+        return JSONResponse(
+            status_code=status.HTTP_204_NO_CONTENT,
+            content={"detail": "Logout successful"}
+        )
