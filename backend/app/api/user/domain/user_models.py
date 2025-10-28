@@ -59,6 +59,9 @@ class User(UserBase, table=True):
 
     hashed_password: str = Field(nullable=False)
 
+    is_2fa_enabled: bool = Field(default=False, nullable=False)
+    otp_secret: Optional[str] = Field(default=None, nullable=True)
+
     last_login: Optional[datetime.datetime] = Field(default=None)
 
     created_at: datetime.datetime = Field(
