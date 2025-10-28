@@ -10,7 +10,6 @@ from starlette.responses import JSONResponse
 from app.api.role.application.role_service import RoleService
 from app.api.shared.aggregate.infrastructure.repository.sql.sql_alchemy_aggregate_root_repository import \
     SQLAlchemyAggregateRootRepository
-from app.api.tenant.application.tenant_service import TenantService
 from app.api.tenant.domain.tenant_models import Tenant
 from app.api.user.domain.auth_models import Token, TokenPayload
 from app.api.user.domain.user_models import User, UserCreate
@@ -165,7 +164,8 @@ class AuthService:
 
         return resp
 
-    async def logout_user(self, response: Response) -> JSONResponse:
+    @staticmethod
+    async def logout_user(response: Response) -> JSONResponse:
         response.delete_cookie(key="access_token")
 
         return JSONResponse(

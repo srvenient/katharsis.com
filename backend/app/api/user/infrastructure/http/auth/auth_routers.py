@@ -4,6 +4,7 @@ from fastapi import APIRouter, Response, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.api.deps import AppContextDep
+from app.api.user.application.auth_service import AuthService
 from app.api.user.domain.user_models import UserCreate
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -24,5 +25,5 @@ async def login(
 
 
 @router.post("/logout", status_code=204)
-async def logout(response: Response, ctx: AppContextDep):
-    return await ctx.auth_service.logout_user(response)
+async def logout(response: Response):
+    return await AuthService.logout_user(response)
