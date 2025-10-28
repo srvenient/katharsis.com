@@ -1,10 +1,13 @@
+import base64
 import uuid
 from datetime import timedelta, datetime, timezone
+from io import BytesIO
 from typing import Optional
 
 import pyotp
-from jose import jwt
+import qrcode
 from fastapi.security import OAuth2PasswordBearer
+from jose import jwt
 from passlib.context import CryptContext
 
 from app.core.config import settings
@@ -59,13 +62,19 @@ def get_password_hash(password) -> str:
     return pwd_context.hash(password)
 
 
-def generate_2fa_secret_key() -> str:
-    return pyotp.random_base32()
-
-
-def get_totp_uri(secret: str, username: str, issuer_name="qr-access") -> str:
+def get_totp_uri(secret: str, username: str, issuer_name="Katharsis") -> str:
     return pyotp.TOTP(secret).provisioning_uri(name=username, issuer_name=issuer_name)
 
 
+def generate_2fa_secret_key(username: str) -> tuple[str, bytes]:
+    secret = pyotp.random_base32()
+    uri = get_totp_uri(secret=secret, username=username)
+    qr = qrcode.make(uri)
+    buffer = BytesIO()
+    qr.save(buffer, format="PNG")
+    qr_base64 = base64.b64encode(buffer.getvalue())
+    return secret, qr_base64
+
+
 def verify_2fa_token(secret: str, token: str) -> bool:
-    return pyotp.TOTP(secret).verify(token, valid_window=1)  # Allow a 30-second window for token validity
+    return pyotp.TOTP(secret).verify(token)
