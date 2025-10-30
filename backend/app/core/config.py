@@ -57,13 +57,14 @@ class Settings(BaseSettings):
             self.FRONTEND_HOST
         ]
 
+    FRONTEND_URL: str = "http://localhost:3000"
     SMTP_TLS: bool = True
     SMTP_SSL: bool = False
     SMTP_PORT: int = 587
     SMTP_HOST: str = "smtp.gmail.com"
-    SMTP_USER: EmailStr = "nrodriguezr@unimonserrate.edu.co"
-    SMTP_PASSWORD: str = "vtwd koxc scmz yegx"
-    EMAILS_FROM_EMAIL: EmailStr = "nrodriguezr@unimonserrate.edu.co"
+    SMTP_USER: EmailStr = "katharsisinv@gmail.com"
+    SMTP_PASSWORD: str = "sajq fnzg fbmr smyb"
+    EMAILS_FROM_EMAIL: EmailStr = "katharsisinv@gmail.com"
     EMAILS_FROM_NAME: str = "Forgot your password?"
 
     @model_validator(mode="after")

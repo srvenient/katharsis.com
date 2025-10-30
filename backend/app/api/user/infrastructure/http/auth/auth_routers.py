@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Response, Depends, status
+from fastapi import APIRouter, Response, Depends, status, Form
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.api.deps import AppContextDep
@@ -36,3 +36,20 @@ async def verify_2fa(
         ctx: AppContextDep
 ):
     return await ctx.auth_service.verify_2fa_code(response, code, ctx)
+
+
+@router.post("/forgot-password", status_code=200)
+async def forgot_password(
+        ctx: AppContextDep,
+        email: Annotated[str, Form(...)],
+):
+    return await ctx.auth_service.forgot_password(email)
+
+
+@router.post("/reset-password", status_code=200)
+async def reset_password(
+        ctx: AppContextDep,
+        token: Annotated[str, Form(...)],
+        new_password: Annotated[str, Form(...)],
+):
+    return await ctx.auth_service.reset_password(token, new_password)

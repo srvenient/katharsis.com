@@ -4,6 +4,7 @@ from typing import Optional
 import jwt
 from fastapi import Response, HTTPException, status, Cookie, Form
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 from jwt import InvalidTokenError
 from pydantic import ValidationError
 from starlette.responses import JSONResponse
@@ -271,3 +272,78 @@ class AuthService:
         )
 
         return resp
+
+    async def forgot_password(self, email: str) -> JSONResponse:
+        """Envía un correo con enlace para restablecer contraseña."""
+        user = await self.get_user_by_email(email)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No user found with this email."
+            )
+
+        # Generar token de restablecimiento
+        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+        payload = {"sub": str(user.id), "exp": expire, "type": "reset_password"}
+        token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+
+        # Configuración SMTP
+        conf = ConnectionConfig(
+            MAIL_USERNAME=settings.SMTP_USER,
+            MAIL_PASSWORD=settings.SMTP_PASSWORD,
+            MAIL_FROM=settings.EMAILS_FROM_EMAIL,
+            MAIL_FROM_NAME=settings.EMAILS_FROM_NAME,
+            MAIL_SERVER=settings.SMTP_HOST,
+            MAIL_PORT=settings.SMTP_PORT,
+            MAIL_STARTTLS=settings.SMTP_TLS,
+            MAIL_SSL_TLS=settings.SMTP_SSL,
+            USE_CREDENTIALS=True,
+        )
+
+        reset_link = f"{settings.FRONTEND_URL}/reset-password?token={token}"
+
+        message = MessageSchema(
+            subject="Restablecer tu contraseña",
+            recipients=[email],
+            body=f"""
+            <h3>Hola, {user.full_name or user.email}</h3>
+            <p>Has solicitado restablecer tu contraseña.</p>
+            <p>Haz clic en el siguiente enlace (válido por 15 minutos):</p>
+            <a href="{reset_link}">{reset_link}</a>
+            """,
+            subtype="html",
+        )
+
+        fm = FastMail(conf)
+        await fm.send_message(message)
+
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={"detail": "Password reset email sent successfully"}
+        )
+
+    async def reset_password(self, token: str, new_password: str) -> JSONResponse:
+        """Permite al usuario cambiar su contraseña usando el token enviado al correo."""
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+            if payload.get("type") != "reset_password":
+                raise InvalidTokenError("Invalid reset token type")
+            user_id: str = payload.get("sub")
+        except InvalidTokenError:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Invalid or expired reset token"
+            )
+
+        user: User = await self.user_repo.find_async(id=user_id)
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        hashed_password = security.get_password_hash(new_password)
+        user.hashed_password = hashed_password
+        await self.user_repo.save_async(user)
+
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={"detail": "Password reset successfully"}
+        )
