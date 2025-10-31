@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { userHttpClient } from '../api/user.http-client';
-import { userInfo } from 'os';
+import { initialState } from '../states/user.states';
 
 export const fetchMe = createAsyncThunk(
   'user/fetchMe',
   async (_, { rejectWithValue }) => {
     try {
-      return userHttpClient.fetchMe();
+      return await userHttpClient.fetchMe();
     } catch (error: any) {
       return rejectWithValue(error.response?.data || error.message);
     }
@@ -15,11 +15,7 @@ export const fetchMe = createAsyncThunk(
 
 export const userSlice = createSlice({
   name: 'user',
-  initialState: {
-    userInfo: null as any | null,
-    loading: false,
-    error: null as string | null,
-  },
+  initialState: initialState,
   reducers: {
     clearUser: (state) => {
       state.userInfo = null;

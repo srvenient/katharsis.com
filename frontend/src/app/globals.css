@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import 'lenis/dist/lenis.css';
 
 @theme {
   --font-special: 'Roobert', Arial, sans-serif;

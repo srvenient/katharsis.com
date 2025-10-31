@@ -25,7 +25,6 @@ export default function AuthLayout({
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar {...config} />
       <main className="flex-1">{children}</main>
     </div>
   );

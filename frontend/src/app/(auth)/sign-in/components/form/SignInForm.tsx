@@ -2,11 +2,14 @@
 
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import PasswordInput from '@/app/(auth)/components/form/input/PasswordInput';
-import { Form } from '@/app/(auth)/components/form/Form';
-import EmailInput from '@/app/(auth)/components/form/input/EmailInput';
+import PasswordInput from '@/app/components/form/input/PasswordInput';
+import { Form } from '@/app/components/form/Form';
+import EmailInput from '@/app/components/form/input/EmailInput';
 import { useAppDispatch } from '@/common/redux/hooks';
-import { login } from '@/common/redux/features/auth/slices/auth.slice';
+import {
+  login,
+  setTempToken,
+} from '@/common/redux/features/auth/slices/auth.slice';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
@@ -29,15 +32,23 @@ export default function SignInForm() {
 
   const dispatch = useAppDispatch();
   const router = useRouter();
+
   const [error, setError] = useState<string | null>(null);
 
   const onSubmit: SubmitHandler<FormValues> = async (data: FormValues) => {
+    setError(null);
+
     try {
-      const res = await dispatch(login(data)).unwrap();
-      if (res) {
-        reset();
-        router.push('/onboarding');
-      } else setError('Invalid email or password. Please try again.');
+      const payload = await dispatch(
+        login({ username: data.username, password: data.password })
+      ).unwrap();
+
+      if (payload?.['2fa_token']) {
+        dispatch(setTempToken(payload['2fa_token']));
+        router.push('/2fa/verify');
+      } else {
+        router.push('/dashboard');
+      }
     } catch {
       setError('Unable to sign in. Please check your credentials.');
     }
@@ -96,10 +107,10 @@ export default function SignInForm() {
               type="button"
               className="self-end relative group cursor-pointer"
             >
-              <span className="relative text-[13.5px] bg-clip-text font-special font-semibold">
+              <span className="relative text-[13.5px] text-blue-400 bg-clip-text font-special font-semibold">
                 Forgot Password?
                 <span
-                  className="absolute left-0 -bottom-0.5 h-0.5 w-0 bg-white
+                  className="absolute left-0 -bottom-0.5 h-0.5 w-0 bg-theme-dodger-blue
                     transition-all duration-500 group-hover:w-full"
                 />
               </span>
@@ -142,8 +153,8 @@ export default function SignInForm() {
               >
                 <span
                   className="
-                    relative text-[13.5px] text-blue-400 bg-clip-text 
-                    font-special font-semibold transition-colors duration-300 hover:text-white
+                    relative text-[13.5px] text-white bg-clip-text 
+                    font-special font-semibold transition-colors duration-300 hover:text-white/80
                   "
                 >
                   Sign Up

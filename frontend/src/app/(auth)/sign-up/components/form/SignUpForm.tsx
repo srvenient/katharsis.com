@@ -1,17 +1,17 @@
 'use client';
 
-import { Form } from '@/app/(auth)/components/form/Form';
-import EmailInput from '@/app/(auth)/components/form/input/EmailInput';
+import { Form } from '@/app/components/form/Form';
+import EmailInput from '@/app/components/form/input/EmailInput';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { FacebookIcon } from '../ui/icons/types/FacebookIcon';
 import { GoogleIcon } from '../ui/icons/types/GoogleIcon';
 import { AppleIcon } from '../ui/icons/types/AppleIcon';
 import Icon from '../ui/icons/Icon';
 import { useRouter } from 'next/navigation';
-import SelectInput from '@/app/(auth)/components/form/input/SelectInput';
-import Input from '@/app/(auth)/components/form/input/Input';
-import ConfirmPasswordInput from '@/app/(auth)/components/form/input/ConfirmPasswordInput';
-import PasswordInput from '@/app/(auth)/components/form/input/PasswordInput';
+import SelectInput from '@/app/components/form/input/SelectInput';
+import Input from '@/app/components/form/input/Input';
+import ConfirmPasswordInput from '@/app/components/form/input/ConfirmPasswordInput';
+import PasswordInput from '@/app/components/form/input/PasswordInput';
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '@/common/redux/hooks';
 import { register } from '@/common/redux/features/auth/slices/auth.slice';

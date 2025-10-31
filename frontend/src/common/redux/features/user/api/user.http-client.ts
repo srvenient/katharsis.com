@@ -14,7 +14,7 @@ export class UserHttpClient extends BaseHttpClient {
 
   async fetchMe(): Promise<any> {
     try {
-      const { data } = await this.instance.post('/auth/me');
+      const { data } = await this.instance.get('/users/me');
       if (!data) {
         throw new ApiError('User not found', 404);
       }
