@@ -1,6 +1,21 @@
-.vscode
+# JetBrains IDEs (IntelliJ, WebStorm, PyCharm, etc.)
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# VSCode
+.vscode/
+
+# Node.js
 node_modules/
+
+# Playwright reports
 /test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Optional: OS / editor junk
+.DS_Store
+Thumbs.db
