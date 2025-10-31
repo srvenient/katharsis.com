@@ -4,9 +4,10 @@ from typing import Generator, Annotated
 from fastapi import Depends, Request, HTTPException, status
 from sqlmodel import Session
 
+from app.api.user.application.auth.two_factor_service import TwoFactorService
 from app.core.db import engine
 from app.api.role.application.role_service import RoleService
-from app.api.user.application.auth_service import AuthService
+from app.api.user.application.auth.auth_service import AuthService
 from app.api.tenant.application.tenant_service import TenantService
 from app.api.shared.aggregate.infrastructure.repository.sql.sql_alchemy_aggregate_root_repository import (
     SQLAlchemyAggregateRootRepository,
@@ -56,16 +57,26 @@ def get_auth_service(
     return AuthService(user_repo, role_service, tenant_service)
 
 
+def get_two_factor_service(
+        user_repo=Depends(get_user_repo),
+        role_service=Depends(get_role_service),
+        tenant_service=Depends(get_tenant_repo)
+) -> TwoFactorService:
+    return TwoFactorService(user_repo, role_service, tenant_service)
+
+
 async def get_app_context(
         request: Request,
         tenant_service: TenantService = Depends(get_tenant_service),
         role_service: RoleService = Depends(get_role_service),
         auth_service: AuthService = Depends(get_auth_service),
+        two_factor_service: TwoFactorService = Depends(get_two_factor_service),
 ) -> AppContext:
     ctx = AppContext(
         tenant_service=tenant_service,
         role_service=role_service,
         auth_service=auth_service,
+        two_factor_service=two_factor_service,
     )
 
     try:

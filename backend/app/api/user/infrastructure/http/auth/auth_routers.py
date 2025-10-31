@@ -1,10 +1,11 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Response, Depends, status, Form
+from fastapi import APIRouter, Response, Depends, Form, Body
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.api.deps import AppContextDep
-from app.api.user.application.auth_service import AuthService
+from app.api.shared.service.email_service import NewPassword
+from app.api.user.application.auth.auth_service import AuthService
 from app.api.user.domain.user_models import UserCreate
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -29,27 +30,47 @@ async def logout(response: Response):
     return await AuthService.logout_user(response)
 
 
-@router.post("/verify-2fa", status_code=200)
+@router.post("/password-recovery/{email}")
+async def recover_password(email: str, ctx: AppContextDep):
+    return await ctx.auth_service.recover_password(email)
+
+
+@router.post("/reset-password")
+async def reset_password(body: NewPassword, ctx: AppContextDep):
+    return await ctx.auth_service.reset_password(body)
+
+
+@router.post("/2fa/setup/start", status_code=200)
+async def start_2fa_setup(ctx: AppContextDep):
+    return await ctx.two_factor_service.start_2fa_setup(ctx.current_user)
+
+
+@router.delete("/2fa/setup/cancel", status_code=200)
+async def cancel_2fa_setup(ctx: AppContextDep):
+    return await ctx.two_factor_service.cancel_2fa_setup(ctx.current_user)
+
+
+@router.post("/2fa/setup/confirm")
+async def confirm_2fa_setup(
+        ctx: AppContextDep,
+        payload: dict = Body(...),
+):
+    return await ctx.two_factor_service.confirm_2fa_setup(ctx.current_user, payload.get("code"))
+
+
+@router.delete("/2fa/disable", status_code=200)
+async def disable_2fa(ctx: AppContextDep):
+    return await ctx.two_factor_service.disable_2fa(ctx.current_user)
+
+
+from fastapi import Form
+
+
+@router.post("/2fa/verify", status_code=200)
 async def verify_2fa(
         response: Response,
-        code: str,
-        ctx: AppContextDep
-):
-    return await ctx.auth_service.verify_2fa_code(response, code, ctx)
-
-
-@router.post("/forgot-password", status_code=200)
-async def forgot_password(
         ctx: AppContextDep,
-        email: Annotated[str, Form(...)],
+        temp_token: str = Form(...),
+        code: str = Form(...),
 ):
-    return await ctx.auth_service.forgot_password(email)
-
-
-@router.post("/reset-password", status_code=200)
-async def reset_password(
-        ctx: AppContextDep,
-        token: Annotated[str, Form(...)],
-        new_password: Annotated[str, Form(...)],
-):
-    return await ctx.auth_service.reset_password(token, new_password)
+    return await ctx.two_factor_service.verify_2fa_code(response, temp_token, code)

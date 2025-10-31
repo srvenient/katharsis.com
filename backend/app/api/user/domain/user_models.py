@@ -78,6 +78,8 @@ class User(UserBase, table=True):
 class UserPublic(UserBase):
     id: uuid.UUID
 
+    is_2fa_enabled: bool
+
 
 class UsersPublic(SQLModel):
     data: list[UserPublic]
