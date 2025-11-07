@@ -27,7 +27,6 @@ export default function SignInForm() {
 
   const {
     formState: { isValid, isSubmitting },
-    reset,
   } = methods;
 
   const dispatch = useAppDispatch();
