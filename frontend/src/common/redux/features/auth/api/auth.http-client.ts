@@ -58,7 +58,6 @@ export class AuthHttpClient extends BaseHttpClient {
     await this.instance.post('/auth/logout');
   }
 
-
   async start2faSetup(): Promise<{ qr_code: string; secret_key: string }> {
     try {
       const res = await this.instance.post('/auth/2fa/setup/start');
@@ -91,7 +90,6 @@ export class AuthHttpClient extends BaseHttpClient {
       throw new ApiError('Server error', 500);
     }
   }
-  
 
   async disable2FA(): Promise<boolean> {
     try {
@@ -128,7 +126,7 @@ export class AuthHttpClient extends BaseHttpClient {
   async verify2FACode(temp_token: string, code: string): Promise<boolean> {
     try {
       const res = await this.instance.post(
-        '/auth/2fa/verify', 
+        '/auth/2fa/verify',
         new URLSearchParams({ temp_token, code }),
         {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
